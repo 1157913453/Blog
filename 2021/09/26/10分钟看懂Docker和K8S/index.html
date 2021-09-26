@@ -1,0 +1,672 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgba(47,65,84,0.7)">
+  <meta name="description" content="">
+  <meta name="author" content="天涯过客">
+  <meta name="keywords" content="">
+  
+  <title>10分钟看懂Docker和K8S - 天涯过客的个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":true,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"0287da7553a05031a40655277f77c232","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"UryFueQ0QM8u13LtdEcy55Oa-gzGzoHsz","app_key":"lrLoQiKVouxnqfiXe8o8QYvk","server_url":"https://uryfueq0.lc-cn-n1-shared.com"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>天涯过客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/6.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="10分钟看懂Docker和K8S">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      天涯过客
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-09-26 17:54" pubdate>
+        2021年9月26日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      31
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">10分钟看懂Docker和K8S</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年9月26日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <blockquote>
+<p>昨天看到一个讲K8S和docker的文章，觉得挺不错的，分享一下<br> 原文链接: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/53260098">10分钟看懂Docker和K8S</a></p>
+</blockquote>
+<p>2010年，几个搞IT的年轻人，在美国旧金山成立了一家名叫“dotCloud”的公司。<br><img src="https://pic4.zhimg.com/80/v2-e6390d9358b05d82105fe391762346b3_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>这家公司主要提供基于PaaS的云计算技术服务。具体来说，是和LXC有关的容器技术。<br><img src="https://pic3.zhimg.com/80/v2-63e6181057a7837a6150ac084a8e41b6_720w.jpg" srcset="/img/loading.gif" lazyload alt="LXC，就是Linux容器虚拟技术（Linux container）"></p>
+<p>LXC，就是Linux容器虚拟技术（Linux container）</p>
+<p>后来，dotCloud公司将自己的容器技术进行了简化和标准化，并命名为——Docker。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-2ac9ff25114ecd2fedb0baec3b5f8bcf_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>Docker技术诞生之后，并没有引起行业的关注。而dotCloud公司，作为一家小型创业企业，在激烈的竞争之下，也步履维艰。</p>
+<p>正当他们快要坚持不下去的时候，脑子里蹦出了“开源”的想法。</p>
+<p>什么是“开源”？开源，就是开放源代码。也就是将原来内部保密的程序源代码开放给所有人，然后让大家一起参与进来，贡献代码和意见。<br><img src="https://pic1.zhimg.com/80/v2-0d5656bdb4300b59820ac0de839d9b50_720w.jpg" srcset="/img/loading.gif" lazyload alt="Open Source，开源"></p>
+<p>有的软件是一开始就开源的。也有的软件，是混不下去，创造者又不想放弃，所以选择开源。自己养不活，就吃“百家饭”嘛。</p>
+<p>2013年3月，dotCloud公司的创始人之一，Docker之父，28岁的Solomon Hykes正式决定，将Docker项目开源。<br><img src="https://pic4.zhimg.com/80/v2-74a674a7aca771d4d5ea8be1ef380da7_720w.jpg" srcset="/img/loading.gif" lazyload alt="Solomon Hykes(今年刚从Docker离职)"><br>不开则已，一开惊人。越来越多的IT工程师发现了Docker的优点，然后蜂拥而至，加入Docker开源社区。Docker的人气迅速攀升，速度之快，令人瞠目结舌。</p>
+<p>开源当月，Docker 0.1版本发布。此后的每一个月，Docker都会发布一个版本。到2014年6月9日，Docker 1.0版本正式发布。</p>
+<p>此时的Docker，已经成为行业里人气最火爆的开源技术，没有之一。甚至像Google、微软、Amazon、VMware这样的巨头，都对它青睐有加，表示将全力支持。</p>
+<p>Docker火了之后，dotCloud公司干脆把公司名字也改成了Docker Inc.。Docker和容器技术为什么会这么火爆？说白了，就是因为它“轻”。</p>
+<p>在容器技术之前，业界的网红是虚拟机。虚拟机技术的代表，是VMWare和OpenStack。<br><img src="https://pic2.zhimg.com/80/v2-a77dceb6ebc290b6476e50b88c431985_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>相信很多人都用过虚拟机。虚拟机，就是在你的操作系统里面，装一个软件，然后通过这个软件，再模拟一台甚至多台“子电脑”出来。<br><img src="https://pic3.zhimg.com/80/v2-31a159040af2711fb14f81a9cb9b5b06_720w.jpg" srcset="/img/loading.gif" lazyload alt="虚拟机，类似于“子电脑”"></p>
+<p>虚拟机，类似于“子电脑”。在“子电脑”里，你可以和正常电脑一样运行程序，例如开QQ。如果你愿意，你可以变出好几个“子电脑”，里面都开上QQ。“子电脑”和“子电脑”之间，是相互隔离的，互不影响。</p>
+<p>虚拟机属于虚拟化技术。而Docker这样的容器技术，也是虚拟化技术，属于轻量级的虚拟化。</p>
+<p>虚拟机虽然可以隔离出很多“子电脑”，但占用空间更大，启动更慢，虚拟机软件可能还要花钱（例如VMWare）。</p>
+<p>而容器技术恰好没有这些缺点。它不需要虚拟出整个操作系统，只需要虚拟一个小规模的环境（类似“沙箱”）。<br><img src="https://pic2.zhimg.com/80/v2-6328f613b98c1efaf8d47ff9f134c4d9_720w.jpg" srcset="/img/loading.gif" lazyload><br>它启动时间很快，几秒钟就能完成。而且，它对资源的利用率很高（一台主机可以同时运行几千个Docker容器）。此外，它占的空间很小，虚拟机一般要几GB到几十GB的空间，而容器只需要MB级甚至KB级。<br><img src="https://pic3.zhimg.com/80/v2-c2a31e2008835b2974170ad1dbac0d42_720w.jpg" srcset="/img/loading.gif" lazyload alt="容器和虚拟机的对比"></p>
+<p>正因为如此，容器技术受到了热烈的欢迎和追捧，发展迅速。我们具体来看看Docker。</p>
+<p>大家需要注意，Docker本身并不是容器，它是创建容器的工具，是应用容器引擎。</p>
+<p>想要搞懂Docker，其实看它的两句口号就行。</p>
+<p>第一句，是“Build, Ship and Run”。<br><img src="https://pic2.zhimg.com/80/v2-d733699d51c1c95f89ac7864f6ac7c31_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>也就是，“搭建、发送、运行”，三板斧。</p>
+<p>举个例子：</p>
+<p>我来到一片空地，想建个房子，于是我搬石头、砍木头、画图纸，一顿操作，终于把这个房子盖好了。<br><img src="https://pic4.zhimg.com/80/v2-3510cae800d084679a5482ae4c0dbf4f_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>结果，我住了一段时间，想搬到另一片空地去。这时候，按以往的办法，我只能再次搬石头、砍木头、画图纸、盖房子。</p>
+<p>但是，跑来一个老巫婆，教会我一种魔法。</p>
+<p>这种魔法，可以把我盖好的房子复制一份，做成“镜像”，放在我的背包里。<br><img src="https://pic1.zhimg.com/80/v2-41444ed46f673687eed7c94f81c373b8_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>等我到了另一片空地，就用这个“镜像”，复制一套房子，摆在那边，拎包入住。<br><img src="https://pic1.zhimg.com/80/v2-c41526641da06bfb97dd2ac1f57aa9c4_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>怎么样？是不是很神奇？</p>
+<p>所以，Docker的第二句口号就是：“Build once，Run anywhere（搭建一次，到处能用）”。</p>
+<p>Docker技术的三大核心概念，分别是：</p>
+<ul>
+<li>镜像（Image）</li>
+<li>容器（Container）</li>
+<li>仓库（Repository）<br>我刚才例子里面，那个放在包里的“镜像”，就是Docker镜像。而我的背包，就是Docker仓库。我在空地上，用魔法造好的房子，就是一个Docker容器。</li>
+</ul>
+<p>说白了，这个Docker镜像，是一个特殊的文件系统。它除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（例如环境变量）。</p>
+<p>镜像不包含任何动态数据，其内容在构建之后也不会被改变。</p>
+<p>也就是说，每次变出房子，房子是一样的，但生活用品之类的，都是不管的。谁住谁负责添置。</p>
+<p>每一个镜像可以变出一种房子。那么，我可以有多个镜像呀！</p>
+<p>也就是说，我盖了一个欧式别墅，生成了镜像。另一个哥们可能盖了一个中国四合院，也生成了镜像。还有哥们，盖了一个非洲茅草屋，也生成了镜像。。。</p>
+<p>这么一来，我们可以交换镜像，你用我的，我用你的，岂不是很爽？<br><img src="https://pic4.zhimg.com/80/v2-b2b6248eeac508d5a9ad1c7fbf6cb1ef_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>于是乎，就变成了一个大的公共仓库。负责对Docker镜像进行管理的，是Docker Registry服务（类似仓库管理员）。</p>
+<p>不是任何人建的任何镜像都是合法的。万一有人盖了一个有问题的房子呢？所以，Docker Registry服务对镜像的管理是非常严格的。</p>
+<p>最常使用的Registry公开服务，是官方的Docker Hub，这也是默认的Registry，并拥有大量的高质量的官方镜像。</p>
+<p>好了，说完了Docker，我们再把目光转向K8S。</p>
+<p>就在Docker容器技术被炒得热火朝天之时，大家发现，如果想要将Docker应用于具体的业务实现，是存在困难的——编排、管理和调度等各个方面，都不容易。</p>
+<p>于是，人们迫切需要一套管理系统，对Docker及容器进行更高级更灵活的管理。</p>
+<p>就在这个时候，K8S出现了。K8S，就是基于容器的集群管理平台，它的全称，是kubernetes。<br><img src="https://pic3.zhimg.com/80/v2-fce2a94afe63f3a6521b2efcd5bffa12_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>Kubernetes这个单词来自于希腊语，含义是舵手或领航员。K8S是它的缩写，用“8”字替代了“ubernete”这8个字符。</p>
+<p>和Docker不同，K8S的创造者，是众人皆知的行业巨头——Google。然而，K8S并不是一件全新的发明。它的前身，是Google自己捣鼓了十多年的Borg系统。</p>
+<p>K8S是2014年6月由Google公司正式公布出来并宣布开源的。</p>
+<p>同年7月，微软、Red Hat、IBM、Docker、CoreOS、Mesosphere和Saltstack等公司，相继加入K8S。之后的一年内，VMware、HP、Intel等公司，也陆续加入。</p>
+<p>2015年7月，Google正式加入OpenStack基金会。与此同时，Kuberentes v1.0正式发布。</p>
+<p>目前，kubernetes的版本已经发展到V1.13。</p>
+<p>K8S的架构，略微有一点复杂，我们简单来看一下。</p>
+<p>一个K8S系统，通常称为一个K8S集群（Cluster）。</p>
+<p>这个集群主要包括两个部分：</p>
+<ul>
+<li>一个Master节点（主节点）</li>
+<li>一群Node节点（计算节点）<br><img src="https://pic4.zhimg.com/80/v2-466804fc47bd2e939e0413d9c32170af_720w.jpg" srcset="/img/loading.gif" lazyload></li>
+</ul>
+<p>一看就明白：Master节点主要还是负责管理和控制。Node节点是工作负载节点，里面是具体的容器。</p>
+<p>深入来看这两种节点。</p>
+<p>首先是Master节点。<br><img src="https://pic2.zhimg.com/80/v2-7fa63b292368c8f21bd4582861a6983d_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li><p>Master节点包括API Server、Scheduler、Controller manager、etcd。</p>
+</li>
+<li><p>API Server是整个系统的对外接口，供客户端和其它组件调用，相当于“营业厅”。</p>
+</li>
+<li><p>Scheduler负责对集群内部的资源进行调度，相当于“调度室”。</p>
+</li>
+<li><p>Controller manager负责管理控制器，相当于“大总管”。</p>
+</li>
+</ul>
+<p>然后是Node节点。<br><img src="https://pic4.zhimg.com/80/v2-8cb338cd8923fa0e6857f45facc8f00f_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>Node节点包括Docker、kubelet、kube-proxy、Fluentd、kube-dns（可选），还有就是Pod。</p>
+<p>Pod是Kubernetes最基本的操作单元。一个Pod代表着集群中运行的一个进程，它内部封装了一个或多个紧密相关的容器。</p>
+<p>除了Pod之外，K8S还有一个Service的概念，一个Service可以看作一组提供相同服务的Pod的对外访问接口。这段不太好理解，跳过吧。</p>
+<ul>
+<li><p>Docker，不用说了，创建容器的。</p>
+</li>
+<li><p>Kubelet，主要负责监视指派到它所在Node上的Pod，包括创建、修改、监控、删除等。</p>
+</li>
+<li><p>Kube-proxy，主要负责为Pod对象提供代理。</p>
+</li>
+<li><p>Fluentd，主要负责日志收集、存储与查询。</p>
+</li>
+</ul>
+<p>是不是有点懵？唉，三言两语真的很难讲清楚，继续跳过吧。</p>
+<p>Docker和K8S都介绍完了，然而文章并没有结束。</p>
+<p>接下来的部分，是写给核心网工程师甚至所有通信工程师看的。</p>
+<p>从几十年前的1G，到现在的4G，再到将来的5G，移动通信发生了翻天覆地的变化，核心网亦是如此。</p>
+<p>但是，如果你仔细洞察这些变化，会发现，所谓的核心网，其实本质上并没有发生改变，无非就是很多的服务器而已。不同的核心网网元，就是不同的服务器，不同的计算节点。</p>
+<p>变化的，是这些“服务器”的形态和接口：形态，从机柜单板，变成机柜刀片，从机柜刀片，变成X86通用刀片服务器；接口，从中继线缆，变成网线，从网线，变成光纤。</p>
+<p>就算变来变去，还是服务器，是计算节点，是CPU。</p>
+<p>既然是服务器，那么就势必会和IT云计算一样，走上虚拟化的道路。毕竟，虚拟化有太多的优势，例如前文所说的低成本、高利用率、充分灵活、动态调度，等等。</p>
+<p>前几年，大家以为虚拟机是核心网的终极形态。目前看来，更有可能是容器化。这几年经常说的NFV（网元功能虚拟化），也有可能改口为NFC（网元功能容器化）。</p>
+<p>以VoLTE为例，如果按以前2G/3G的方式，那需要大量的专用设备，分别充当EPC和IMS的不同网元。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-db0d325f60de323d1346d9d4e0eab1bd_720w.jpg" srcset="/img/loading.gif" lazyload alt="VoLTE相关的网元"></p>
+<p>而采用容器之后，很可能只需要一台服务器，创建十几个容器，用不同的容器，来分别运行不同网元的服务程序。<br><img src="https://pic1.zhimg.com/80/v2-ebbe757bef45be1ecde8827bb2e1c0bc_720w.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>这些容器，随时可以创建，也可以随时销毁。还能够在不停机的情况下，随意变大，随意变小，随意变强，随意变弱，在性能和功耗之间动态平衡。</p>
+<p>简直完美！</p>
+<p>5G时代，核心网采用微服务架构，也是和容器完美搭配——单体式架构（Monolithic）变成微服务架构（Microservices），相当于一个全能型变成N个专能型。每个专能型，分配给一个隔离的容器，赋予了最大程度的灵活。<br><img src="https://pic2.zhimg.com/80/v2-3d2ac15aaf388e710111a1a8ffcaf7b1_720w.jpg" srcset="/img/loading.gif" lazyload alt="精细化分功"></p>
+<p>按照这样的发展趋势，在移动通信系统中，除了天线，剩下的部分都有可能虚拟化。核心网是第一个，但不是最后一个。虚拟化之后的核心网，与其说属于通信，实际上更应该归为IT。核心网的功能，只是容器中普通一个软件功能而已。</p>
+<p>至于说在座的各位核心网工程师，恭喜你们，马上就要成功转型啦！<br><img src="https://pic3.zhimg.com/80/v2-c4b78f1348d2a1d545d078911957824e_720w.jpg" srcset="/img/loading.gif" lazyload>a<br>喜欢的朋友欢迎上知乎关注原博主枣君的微信公众号：鲜枣课堂</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%B9%E5%99%A8/">容器</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%AE%B9%E5%99%A8/">容器</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/09/20/%E5%AE%89%E8%A3%85MySQL5-7%E6%B2%A1%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">
+                        <span class="hidden-mobile">安装MySQL5.7没设置密码解决方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"UryFueQ0QM8u13LtdEcy55Oa-gzGzoHsz","appKey":"lrLoQiKVouxnqfiXe8o8QYvk","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        京ICP证123456号
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" alt="police-icon"/>
+            
+            <span>京公网安备12345678号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    
+      <script  src="/js/img-lazyload.js" ></script>
+    
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?0287da7553a05031a40655277f77c232";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

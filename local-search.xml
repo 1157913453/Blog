@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>10分钟看懂Docker和K8S</title>
+    <link href="/2021/09/26/10%E5%88%86%E9%92%9F%E7%9C%8B%E6%87%82Docker%E5%92%8CK8S/"/>
+    <url>/2021/09/26/10%E5%88%86%E9%92%9F%E7%9C%8B%E6%87%82Docker%E5%92%8CK8S/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>昨天看到一个讲K8S和docker的文章，觉得挺不错的，分享一下<br> 原文链接: <a href="https://zhuanlan.zhihu.com/p/53260098">10分钟看懂Docker和K8S</a></p></blockquote><p>2010年，几个搞IT的年轻人，在美国旧金山成立了一家名叫“dotCloud”的公司。<br><img src="https://pic4.zhimg.com/80/v2-e6390d9358b05d82105fe391762346b3_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>这家公司主要提供基于PaaS的云计算技术服务。具体来说，是和LXC有关的容器技术。<br><img src="https://pic3.zhimg.com/80/v2-63e6181057a7837a6150ac084a8e41b6_720w.jpg" srcset="/img/loading.gif" lazyload alt="LXC，就是Linux容器虚拟技术（Linux container）"></p><p>LXC，就是Linux容器虚拟技术（Linux container）</p><p>后来，dotCloud公司将自己的容器技术进行了简化和标准化，并命名为——Docker。</p><p><img src="https://pic4.zhimg.com/80/v2-2ac9ff25114ecd2fedb0baec3b5f8bcf_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>Docker技术诞生之后，并没有引起行业的关注。而dotCloud公司，作为一家小型创业企业，在激烈的竞争之下，也步履维艰。</p><p>正当他们快要坚持不下去的时候，脑子里蹦出了“开源”的想法。</p><p>什么是“开源”？开源，就是开放源代码。也就是将原来内部保密的程序源代码开放给所有人，然后让大家一起参与进来，贡献代码和意见。<br><img src="https://pic1.zhimg.com/80/v2-0d5656bdb4300b59820ac0de839d9b50_720w.jpg" srcset="/img/loading.gif" lazyload alt="Open Source，开源"></p><p>有的软件是一开始就开源的。也有的软件，是混不下去，创造者又不想放弃，所以选择开源。自己养不活，就吃“百家饭”嘛。</p><p>2013年3月，dotCloud公司的创始人之一，Docker之父，28岁的Solomon Hykes正式决定，将Docker项目开源。<br><img src="https://pic4.zhimg.com/80/v2-74a674a7aca771d4d5ea8be1ef380da7_720w.jpg" srcset="/img/loading.gif" lazyload alt="Solomon Hykes(今年刚从Docker离职)"><br>不开则已，一开惊人。越来越多的IT工程师发现了Docker的优点，然后蜂拥而至，加入Docker开源社区。Docker的人气迅速攀升，速度之快，令人瞠目结舌。</p><p>开源当月，Docker 0.1版本发布。此后的每一个月，Docker都会发布一个版本。到2014年6月9日，Docker 1.0版本正式发布。</p><p>此时的Docker，已经成为行业里人气最火爆的开源技术，没有之一。甚至像Google、微软、Amazon、VMware这样的巨头，都对它青睐有加，表示将全力支持。</p><p>Docker火了之后，dotCloud公司干脆把公司名字也改成了Docker Inc.。Docker和容器技术为什么会这么火爆？说白了，就是因为它“轻”。</p><p>在容器技术之前，业界的网红是虚拟机。虚拟机技术的代表，是VMWare和OpenStack。<br><img src="https://pic2.zhimg.com/80/v2-a77dceb6ebc290b6476e50b88c431985_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>相信很多人都用过虚拟机。虚拟机，就是在你的操作系统里面，装一个软件，然后通过这个软件，再模拟一台甚至多台“子电脑”出来。<br><img src="https://pic3.zhimg.com/80/v2-31a159040af2711fb14f81a9cb9b5b06_720w.jpg" srcset="/img/loading.gif" lazyload alt="虚拟机，类似于“子电脑”"></p><p>虚拟机，类似于“子电脑”。在“子电脑”里，你可以和正常电脑一样运行程序，例如开QQ。如果你愿意，你可以变出好几个“子电脑”，里面都开上QQ。“子电脑”和“子电脑”之间，是相互隔离的，互不影响。</p><p>虚拟机属于虚拟化技术。而Docker这样的容器技术，也是虚拟化技术，属于轻量级的虚拟化。</p><p>虚拟机虽然可以隔离出很多“子电脑”，但占用空间更大，启动更慢，虚拟机软件可能还要花钱（例如VMWare）。</p><p>而容器技术恰好没有这些缺点。它不需要虚拟出整个操作系统，只需要虚拟一个小规模的环境（类似“沙箱”）。<br><img src="https://pic2.zhimg.com/80/v2-6328f613b98c1efaf8d47ff9f134c4d9_720w.jpg" srcset="/img/loading.gif" lazyload><br>它启动时间很快，几秒钟就能完成。而且，它对资源的利用率很高（一台主机可以同时运行几千个Docker容器）。此外，它占的空间很小，虚拟机一般要几GB到几十GB的空间，而容器只需要MB级甚至KB级。<br><img src="https://pic3.zhimg.com/80/v2-c2a31e2008835b2974170ad1dbac0d42_720w.jpg" srcset="/img/loading.gif" lazyload alt="容器和虚拟机的对比"></p><p>正因为如此，容器技术受到了热烈的欢迎和追捧，发展迅速。我们具体来看看Docker。</p><p>大家需要注意，Docker本身并不是容器，它是创建容器的工具，是应用容器引擎。</p><p>想要搞懂Docker，其实看它的两句口号就行。</p><p>第一句，是“Build, Ship and Run”。<br><img src="https://pic2.zhimg.com/80/v2-d733699d51c1c95f89ac7864f6ac7c31_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>也就是，“搭建、发送、运行”，三板斧。</p><p>举个例子：</p><p>我来到一片空地，想建个房子，于是我搬石头、砍木头、画图纸，一顿操作，终于把这个房子盖好了。<br><img src="https://pic4.zhimg.com/80/v2-3510cae800d084679a5482ae4c0dbf4f_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>结果，我住了一段时间，想搬到另一片空地去。这时候，按以往的办法，我只能再次搬石头、砍木头、画图纸、盖房子。</p><p>但是，跑来一个老巫婆，教会我一种魔法。</p><p>这种魔法，可以把我盖好的房子复制一份，做成“镜像”，放在我的背包里。<br><img src="https://pic1.zhimg.com/80/v2-41444ed46f673687eed7c94f81c373b8_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>等我到了另一片空地，就用这个“镜像”，复制一套房子，摆在那边，拎包入住。<br><img src="https://pic1.zhimg.com/80/v2-c41526641da06bfb97dd2ac1f57aa9c4_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>怎么样？是不是很神奇？</p><p>所以，Docker的第二句口号就是：“Build once，Run anywhere（搭建一次，到处能用）”。</p><p>Docker技术的三大核心概念，分别是：</p><ul><li>镜像（Image）</li><li>容器（Container）</li><li>仓库（Repository）<br>我刚才例子里面，那个放在包里的“镜像”，就是Docker镜像。而我的背包，就是Docker仓库。我在空地上，用魔法造好的房子，就是一个Docker容器。</li></ul><p>说白了，这个Docker镜像，是一个特殊的文件系统。它除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（例如环境变量）。</p><p>镜像不包含任何动态数据，其内容在构建之后也不会被改变。</p><p>也就是说，每次变出房子，房子是一样的，但生活用品之类的，都是不管的。谁住谁负责添置。</p><p>每一个镜像可以变出一种房子。那么，我可以有多个镜像呀！</p><p>也就是说，我盖了一个欧式别墅，生成了镜像。另一个哥们可能盖了一个中国四合院，也生成了镜像。还有哥们，盖了一个非洲茅草屋，也生成了镜像。。。</p><p>这么一来，我们可以交换镜像，你用我的，我用你的，岂不是很爽？<br><img src="https://pic4.zhimg.com/80/v2-b2b6248eeac508d5a9ad1c7fbf6cb1ef_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>于是乎，就变成了一个大的公共仓库。负责对Docker镜像进行管理的，是Docker Registry服务（类似仓库管理员）。</p><p>不是任何人建的任何镜像都是合法的。万一有人盖了一个有问题的房子呢？所以，Docker Registry服务对镜像的管理是非常严格的。</p><p>最常使用的Registry公开服务，是官方的Docker Hub，这也是默认的Registry，并拥有大量的高质量的官方镜像。</p><p>好了，说完了Docker，我们再把目光转向K8S。</p><p>就在Docker容器技术被炒得热火朝天之时，大家发现，如果想要将Docker应用于具体的业务实现，是存在困难的——编排、管理和调度等各个方面，都不容易。</p><p>于是，人们迫切需要一套管理系统，对Docker及容器进行更高级更灵活的管理。</p><p>就在这个时候，K8S出现了。K8S，就是基于容器的集群管理平台，它的全称，是kubernetes。<br><img src="https://pic3.zhimg.com/80/v2-fce2a94afe63f3a6521b2efcd5bffa12_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>Kubernetes这个单词来自于希腊语，含义是舵手或领航员。K8S是它的缩写，用“8”字替代了“ubernete”这8个字符。</p><p>和Docker不同，K8S的创造者，是众人皆知的行业巨头——Google。然而，K8S并不是一件全新的发明。它的前身，是Google自己捣鼓了十多年的Borg系统。</p><p>K8S是2014年6月由Google公司正式公布出来并宣布开源的。</p><p>同年7月，微软、Red Hat、IBM、Docker、CoreOS、Mesosphere和Saltstack等公司，相继加入K8S。之后的一年内，VMware、HP、Intel等公司，也陆续加入。</p><p>2015年7月，Google正式加入OpenStack基金会。与此同时，Kuberentes v1.0正式发布。</p><p>目前，kubernetes的版本已经发展到V1.13。</p><p>K8S的架构，略微有一点复杂，我们简单来看一下。</p><p>一个K8S系统，通常称为一个K8S集群（Cluster）。</p><p>这个集群主要包括两个部分：</p><ul><li>一个Master节点（主节点）</li><li>一群Node节点（计算节点）<br><img src="https://pic4.zhimg.com/80/v2-466804fc47bd2e939e0413d9c32170af_720w.jpg" srcset="/img/loading.gif" lazyload></li></ul><p>一看就明白：Master节点主要还是负责管理和控制。Node节点是工作负载节点，里面是具体的容器。</p><p>深入来看这两种节点。</p><p>首先是Master节点。<br><img src="https://pic2.zhimg.com/80/v2-7fa63b292368c8f21bd4582861a6983d_720w.jpg" srcset="/img/loading.gif" lazyload></p><ul><li><p>Master节点包括API Server、Scheduler、Controller manager、etcd。</p></li><li><p>API Server是整个系统的对外接口，供客户端和其它组件调用，相当于“营业厅”。</p></li><li><p>Scheduler负责对集群内部的资源进行调度，相当于“调度室”。</p></li><li><p>Controller manager负责管理控制器，相当于“大总管”。</p></li></ul><p>然后是Node节点。<br><img src="https://pic4.zhimg.com/80/v2-8cb338cd8923fa0e6857f45facc8f00f_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>Node节点包括Docker、kubelet、kube-proxy、Fluentd、kube-dns（可选），还有就是Pod。</p><p>Pod是Kubernetes最基本的操作单元。一个Pod代表着集群中运行的一个进程，它内部封装了一个或多个紧密相关的容器。</p><p>除了Pod之外，K8S还有一个Service的概念，一个Service可以看作一组提供相同服务的Pod的对外访问接口。这段不太好理解，跳过吧。</p><ul><li><p>Docker，不用说了，创建容器的。</p></li><li><p>Kubelet，主要负责监视指派到它所在Node上的Pod，包括创建、修改、监控、删除等。</p></li><li><p>Kube-proxy，主要负责为Pod对象提供代理。</p></li><li><p>Fluentd，主要负责日志收集、存储与查询。</p></li></ul><p>是不是有点懵？唉，三言两语真的很难讲清楚，继续跳过吧。</p><p>Docker和K8S都介绍完了，然而文章并没有结束。</p><p>接下来的部分，是写给核心网工程师甚至所有通信工程师看的。</p><p>从几十年前的1G，到现在的4G，再到将来的5G，移动通信发生了翻天覆地的变化，核心网亦是如此。</p><p>但是，如果你仔细洞察这些变化，会发现，所谓的核心网，其实本质上并没有发生改变，无非就是很多的服务器而已。不同的核心网网元，就是不同的服务器，不同的计算节点。</p><p>变化的，是这些“服务器”的形态和接口：形态，从机柜单板，变成机柜刀片，从机柜刀片，变成X86通用刀片服务器；接口，从中继线缆，变成网线，从网线，变成光纤。</p><p>就算变来变去，还是服务器，是计算节点，是CPU。</p><p>既然是服务器，那么就势必会和IT云计算一样，走上虚拟化的道路。毕竟，虚拟化有太多的优势，例如前文所说的低成本、高利用率、充分灵活、动态调度，等等。</p><p>前几年，大家以为虚拟机是核心网的终极形态。目前看来，更有可能是容器化。这几年经常说的NFV（网元功能虚拟化），也有可能改口为NFC（网元功能容器化）。</p><p>以VoLTE为例，如果按以前2G/3G的方式，那需要大量的专用设备，分别充当EPC和IMS的不同网元。</p><p><img src="https://pic2.zhimg.com/80/v2-db0d325f60de323d1346d9d4e0eab1bd_720w.jpg" srcset="/img/loading.gif" lazyload alt="VoLTE相关的网元"></p><p>而采用容器之后，很可能只需要一台服务器，创建十几个容器，用不同的容器，来分别运行不同网元的服务程序。<br><img src="https://pic1.zhimg.com/80/v2-ebbe757bef45be1ecde8827bb2e1c0bc_720w.jpg" srcset="/img/loading.gif" lazyload></p><p>这些容器，随时可以创建，也可以随时销毁。还能够在不停机的情况下，随意变大，随意变小，随意变强，随意变弱，在性能和功耗之间动态平衡。</p><p>简直完美！</p><p>5G时代，核心网采用微服务架构，也是和容器完美搭配——单体式架构（Monolithic）变成微服务架构（Microservices），相当于一个全能型变成N个专能型。每个专能型，分配给一个隔离的容器，赋予了最大程度的灵活。<br><img src="https://pic2.zhimg.com/80/v2-3d2ac15aaf388e710111a1a8ffcaf7b1_720w.jpg" srcset="/img/loading.gif" lazyload alt="精细化分功"></p><p>按照这样的发展趋势，在移动通信系统中，除了天线，剩下的部分都有可能虚拟化。核心网是第一个，但不是最后一个。虚拟化之后的核心网，与其说属于通信，实际上更应该归为IT。核心网的功能，只是容器中普通一个软件功能而已。</p><p>至于说在座的各位核心网工程师，恭喜你们，马上就要成功转型啦！<br><img src="https://pic3.zhimg.com/80/v2-c4b78f1348d2a1d545d078911957824e_720w.jpg" srcset="/img/loading.gif" lazyload>a<br>喜欢的朋友欢迎上知乎关注原博主枣君的微信公众号：鲜枣课堂</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>容器</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>linux</tag>
+      
+      <tag>容器</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>安装MySQL5.7没设置密码解决方法</title>
+    <link href="/2021/09/20/%E5%AE%89%E8%A3%85MySQL5-7%E6%B2%A1%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/"/>
+    <url>/2021/09/20/%E5%AE%89%E8%A3%85MySQL5-7%E6%B2%A1%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<p>我在WSL的CentOS7系统中安装MySQL5.7后发现全程都没设置密码</p><blockquote><p>为了加强安全性，MySQL5.7为root用户随机生成了一个密码，在<code>error log</code>中，关于<code>error log</code>的位置，如果安装的是RPM包，则默认是<code>/var/log/mysqld.log</code>。<br>只有启动过一次mysql才可以查看临时密码</p></blockquote><p>执行下面的代码查看</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">grep &#x27;temporary password&#x27; /var/log/mysqld.log<br></code></pre></div></td></tr></table></figure><p>结果如下图<br><img src="https://img-blog.csdnimg.cn/img_convert/7832137af22e79856995f506ee111073.png"><br>可以看到我的临时密码为SC4ef;/l*sZa<br>然后用root登陆MySQL：</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">mysql -uroot -p<br></code></pre></div></td></tr></table></figure><p>输入密码登陆成功<br>再修改密码为123456，</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;123456&#x27;;<br></code></pre></div></td></tr></table></figure><p>如果密码设置太简单出现以下的提示<br><code>ERROR 1819 (HY000): Your password does not satisfy the current policy requirements</code><br>如何解决呢？ 这里直接提供解决方案文末有详细的说明</p><p>必须修改两个全局参数：<br>首先，修改validate_password_policy参数的值</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">set global validate_password_policy=0;    <br></code></pre></div></td></tr></table></figure><p>再修改密码的长度</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">set global validate_password_length=1;<br></code></pre></div></td></tr></table></figure><p>再次执行修改密码就可以了</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;123456&#x27;;<br></code></pre></div></td></tr></table></figure><p>授权其他机器登陆</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">GRANT ALL PRIVILEGES ON *.* TO &#x27;root&#x27;@&#x27;%&#x27; IDENTIFIED BY &#x27;mypassword&#x27; WITH GRANT OPTION;<br><br>FLUSH  PRIVILEGES;<br></code></pre></div></td></tr></table></figure><blockquote><p>原文链接：<a href="https://blog.csdn.net/zyw_java/article/details/70949596">Centos7.3 安装Mysql5.7并修改初始密码_酷玩时刻-By Javen-CSDN博客</a></p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>MySQL</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>MySQL</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>WSL的CentOS7报错Failed to get D-Bus connection: Operation not permitted解决办法</title>
+    <link href="/2021/09/20/WSL%E7%9A%84CentOS7%E6%8A%A5%E9%94%99Failed-to-get-D-Bus-connection-Operation-not-permitted%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"/>
+    <url>/2021/09/20/WSL%E7%9A%84CentOS7%E6%8A%A5%E9%94%99Failed-to-get-D-Bus-connection-Operation-not-permitted%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<p>WSL的CentOS7使用systemctl和service命令时报错<code>Failed to get D-Bus connection: Operation not permitted</code>,<br>解决办法是更换systemctl文件<br>首先备份systemctl文件</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">mv /usr/bin/systemctl /usr/bin/systemctl.old<br></code></pre></div></td></tr></table></figure><p>然后执行</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">curl https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py &gt; /usr/bin/systemctl<br></code></pre></div></td></tr></table></figure><p>或者直接打开这个网站<a href="https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py">https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py</a>，将页面的所有内容复制，再使用vim打开systemctl文件并粘贴进去保存</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">vim /usr/bin/systemctl<br></code></pre></div></td></tr></table></figure><p>可能会出现卡顿<br>最后执行</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">chmod +x /usr/bin/systemctl<br></code></pre></div></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+      <category>CentOS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>CentOS7安装MySQL5.7</title>
+    <link href="/2021/09/20/CentOS7%E5%AE%89%E8%A3%85MySQL5-7/"/>
+    <url>/2021/09/20/CentOS7%E5%AE%89%E8%A3%85MySQL5-7/</url>
+    
+    <content type="html"><![CDATA[<h3 id="1-下载MySQL安装包"><a href="#1-下载MySQL安装包" class="headerlink" title="1.下载MySQL安装包"></a>1.下载MySQL安装包</h3> <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">wget https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm<br></code></pre></div></td></tr></table></figure><p>安装MySQL源<br> <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">yum -y localinstall mysql57-community-release-el7-11.noarch.rpm <br></code></pre></div></td></tr></table></figure></p><h3 id="2-在线安装MySQL"><a href="#2-在线安装MySQL" class="headerlink" title="2.在线安装MySQL"></a>2.在线安装MySQL</h3><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">yum -y install mysql-community-server<br></code></pre></div></td></tr></table></figure><h3 id="3-启动MySQL服务"><a href="#3-启动MySQL服务" class="headerlink" title="3.启动MySQL服务"></a>3.启动MySQL服务</h3><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">systemctl start mysqld<br></code></pre></div></td></tr></table></figure><p>如果是WSL的CentOS7的话可能会报错：<code>Failed to get D-Bus connection: Operation not permitted</code><br>解决办法：<a href="https://blog.csdn.net/weixin_44294408/article/details/120340885">WSL的CentOS7报错Failed to get D-Bus connection: Operation not permitted解决办法</a></p><h3 id="4-设置MySQL开机自启"><a href="#4-设置MySQL开机自启" class="headerlink" title="4.设置MySQL开机自启"></a>4.设置MySQL开机自启</h3><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">systemctl enable mysqld<br>systemctl daemon-reload<br></code></pre></div></td></tr></table></figure><p>###5.设置root登陆密码<br>这时候你会发现全程都未设置root帐号和密码<br>设置root密码方法：<a href="https://blog.csdn.net/weixin_44294408/article/details/120340860">安装MySQL5.7没设置密码解决方法</a></p><blockquote><p>原文：<a href="https://blog.csdn.net/EB_NUM/article/details/105425622">【centos7 + MySQL5.7 安装】centos7 安装MySQL5.7_宇风-飞扬 的博客-CSDN博客_centos安装mysql5.7</a></p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+      <category>CentOS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>MySQL</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>CentOS7配置阿里源</title>
+    <link href="/2021/09/20/CentOS7%E9%85%8D%E7%BD%AE%E9%98%BF%E9%87%8C%E6%BA%90/"/>
+    <url>/2021/09/20/CentOS7%E9%85%8D%E7%BD%AE%E9%98%BF%E9%87%8C%E6%BA%90/</url>
+    
+    <content type="html"><![CDATA[<h2 id="1-备份原来的文件"><a href="#1-备份原来的文件" class="headerlink" title="1.备份原来的文件"></a>1.备份原来的文件</h2><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak<br></code></pre></div></td></tr></table></figure><h2 id="2-下载阿里云源文件"><a href="#2-下载阿里云源文件" class="headerlink" title="2.下载阿里云源文件"></a>2.下载阿里云源文件</h2><p>用该命令下载阿里云源文件</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo<br></code></pre></div></td></tr></table></figure><p>如果下载成功直接看第三步</p><p>如果显示wget: command not found,就执行下面的命令安装wget</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">yum install wget<br></code></pre></div></td></tr></table></figure><p>安装成功后再执行上面的下载命令</p><p>如果安装失败<br>就在本机的win10系统上浏览器直接访问<a href="http://mirrors.aliyun.com/repo/Centos-7.repo">http://mirrors.aliyun.com/repo/Centos-7.repo</a>下载centos7的源文件<br>假如下载到E盘的Downloads文件夹，再将该文件移动到/etc/yum.repos.d下，我是在WSL中操作，因此直接执行下面命令<br><code>mv /mnt/E/Dwonloads/Centos-7.repo /etc/yum.repos.d/CentOS-Base.repo</code></p><h2 id="3-分别执行yum源更新命令"><a href="#3-分别执行yum源更新命令" class="headerlink" title="3.分别执行yum源更新命令"></a>3.分别执行yum源更新命令</h2><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">yum clean all <br>yum makecache<br>yum update<br></code></pre></div></td></tr></table></figure><p>##4.查看源列表是否更换成功</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">yum repolist<br></code></pre></div></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+      <category>CentOS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>WSL安装CentOS7</title>
+    <link href="/2021/09/20/WSL%E5%AE%89%E8%A3%85CentOS7/"/>
+    <url>/2021/09/20/WSL%E5%AE%89%E8%A3%85CentOS7/</url>
+    
+    <content type="html"><![CDATA[<p>由于工作和学习需要，需要在WSL中安装和配置CentOS7系统</p><h2 id="1-安装和升级WSL"><a href="#1-安装和升级WSL" class="headerlink" title="1.安装和升级WSL"></a>1.安装和升级WSL</h2><p>安装和升级WSL方法可看<a href="https://docs.microsoft.com/zh-cn/windows/wsl/install-win10">微软官方教程</a><br>本人是将电脑中的WSL升级到了WSL2</p><h2 id="2-下载安装CentOS镜像"><a href="#2-下载安装CentOS镜像" class="headerlink" title="2.下载安装CentOS镜像"></a>2.下载安装CentOS镜像</h2><p>首先需要下载CentOS7镜像，下面两个网站都可下载CentOS镜像，选择其中一个进行下载即可<br><a href="https://github.com/mishamosher/CentOS-WSL/releases">https://github.com/mishamosher/CentOS-WSL/releases</a><br><a href="https://github.com/wsldl-pg/CentWSL/releases">https://github.com/wsldl-pg/CentWSL/releases</a><br>本人下载的是其中CentOS7的最新版本<br>解压出来后双击其中的CentOS7.exe，静静等待安装完成即可</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+      <category>CentOS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>从零开始在云服务器搭建Hexo个人博客</title>
+    <link href="/2021/09/20/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%9C%A8%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BAHexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"/>
+    <url>/2021/09/20/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%9C%A8%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BAHexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    
+    <content type="html"><![CDATA[<h3 id="1-购买服务器"><a href="#1-购买服务器" class="headerlink" title="1.购买服务器"></a>1.购买服务器</h3><p>首先需要有服务器，也可以在github pages或者gitee pages上部署，我服务器安装的是centos7.6系统；接下来是选择博客框架，看了网上相关推荐和教程，我最终决定用Hexo来搭建博客</p><h3 id="2-安装Hexo"><a href="#2-安装Hexo" class="headerlink" title="2.安装Hexo"></a>2.安装Hexo</h3><p>因为Hexo依赖node.js，因此推荐安装nvm来管理node.js版本</p><ul><li><p>安装nvm<br>  <a href="https://hub.fastgit.org/coreybutler/nvm-windows/releases">点此下载nvm</a>或者直接执行下面这行命令(当前最新版为0.38)</p>  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">wget -qO- https:<span class="hljs-regexp">//</span>raw.githubusercontent.com<span class="hljs-regexp">/nvm-sh/</span>nvm<span class="hljs-regexp">/v0.38.0/i</span>nstall.sh | bash  <span class="hljs-comment">##下载并安装nvm</span><br><br>source ~/.bashrc    <br></code></pre></div></td></tr></table></figure><p>  最后执行<code>nvm version</code>看到显示了如<code>v16.9.1</code>类似的版本号则为安装成功</p></li><li><p>安装node.js<br>  先后执行以下命令</p>  <figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">nvm</span> install node  ##安装最新版node.js，当前最新版本为v<span class="hljs-number">16</span>.<span class="hljs-number">9</span>.<span class="hljs-number">1</span><br><br><span class="hljs-attribute">nvm</span> use v<span class="hljs-number">16</span>.<span class="hljs-number">9</span>.<span class="hljs-number">1</span>  ##切换到该node版本<br></code></pre></div></td></tr></table></figure></li><li><p>安装Git</p>  <figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake">Windows：下载并安装 git.<br>Mac：使用 Homebrew, MacPorts 或者下载 安装程序。<br>Linux (Ubuntu, Debian)：sudo apt-get <span class="hljs-keyword">install</span> git-core<br>Linux (Fedora, Red Hat, CentOS)：sudo yum <span class="hljs-keyword">install</span> git-core<br></code></pre></div></td></tr></table></figure></li><li><p>安装Hexo</p>  <figure class="highlight avrasm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs avrasm">npm install -g hexo-<span class="hljs-keyword">cli</span><br></code></pre></div></td></tr></table></figure><p>  创建存放博客文件的目录</p>  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/root/</span>hexo<br></code></pre></div></td></tr></table></figure><p>  初始化</p>  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">hexo init <span class="hljs-regexp">/root/</span>hexo<br></code></pre></div></td></tr></table></figure><p>  然后进入该目录，安装依赖</p>  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">cd <span class="hljs-regexp">/root/</span>hexo<br><br>npm i<br></code></pre></div></td></tr></table></figure><p>  则会得到这样的目录：</p>  <figure class="highlight gradle"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gradle">├── _config.yml<br>├── <span class="hljs-keyword">package</span>.json<br>├── scaffolds<br>├── <span class="hljs-keyword">source</span><br>|   └── _posts<br>└── themes<br></code></pre></div></td></tr></table></figure><p>   然后执行<code>hexo -g</code>生成静态文件<br>   然后自己选择一个自己喜欢的<code>hexo</code>主题放进<code>themes</code>文件夹中配置好，配置主题的教程这里就不放了，网上一堆。</p><p>   再执行</p>   <figure class="highlight axapta"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs axapta">hexo <span class="hljs-keyword">server</span><br></code></pre></div></td></tr></table></figure><p> 就能在浏览器中输入<code>xxxx:4000</code>就能访问网站了<br>  ps：<code>其中xxxx指服务器的ip，hexo的默认端口应该是4000</code></p><h3 id="3-安装并配置nginx"><a href="#3-安装并配置nginx" class="headerlink" title="3. 安装并配置nginx"></a>3. 安装并配置nginx</h3></li><li><p>安装nginx</p><p>  更新yum信息</p>  <figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">yum update</span><br></code></pre></div></td></tr></table></figure><p>  下载nginx</p>  <figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake">yum <span class="hljs-keyword">install</span> nginx<br></code></pre></div></td></tr></table></figure></li><li><p>配置nginx</p>  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/</span>nginx<span class="hljs-regexp">/nginx.conf.  /</span><span class="hljs-regexp">/打开nginx的配置文件</span><br></code></pre></div></td></tr></table></figure><p>  可以看到以下内容，</p>  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk"><span class="hljs-comment">## For more information on configuration, see:</span><br><span class="hljs-comment">#   * Official English Documentation: http://nginx.org/en/docs/</span><br><span class="hljs-comment">#   * Official Russian Documentation: http://nginx.org/ru/docs/</span><br><br>user root;   <span class="hljs-regexp">//</span>第五行这里改为root<br>-------------------------------分 割 线------------------------------------------<br> server &#123;<br>       listen       <span class="hljs-number">80</span>;<br>       listen       [::]:<span class="hljs-number">80</span>;       <br>       server_name  zrgo.top;          <span class="hljs-regexp">//</span>这里如果你有域名就填上你服务器绑定的域名,没有就默认<br>       root         <span class="hljs-regexp">/root/</span>hexo<span class="hljs-regexp">/public;    /</span><span class="hljs-regexp">/这里填你Hexo中blog的html文件存放地址</span><br></code></pre></div></td></tr></table></figure><p>  重启nginx服务</p>  <figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">nginx -s reload</span><br></code></pre></div></td></tr></table></figure><p>  现在直接在浏览器中输入你的域名或者服务器ip地址就能看到你的博客网站了！</p></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+      <category>CentOS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+  
+  
+  <entry>
+    <title>about</title>
+    <link href="/"/>
+    <url>/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+  </entry>
+  
+  
+  
+</search>
