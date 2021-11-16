@@ -253,7 +253,7 @@
 </blockquote>
 <p>执行下面的代码查看</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">grep &#x27;temporary password&#x27; /var/log/mysqld.log<br></code></pre></div></td></tr></table></figure>
-<p>结果如下图<br><img src="https://img-blog.csdnimg.cn/img_convert/7832137af22e79856995f506ee111073.png"><br>可以看到我的临时密码为SC4ef;/l*sZa<br>然后用root登陆MySQL：</p>
+<p>结果如下图<br><img src="https://img-blog.csdnimg.cn/img_convert/7832137af22e79856995f506ee111073.png" srcset="/img/loading.gif" lazyload><br>可以看到我的临时密码为SC4ef;/l*sZa<br>然后用root登陆MySQL：</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">mysql -uroot -p<br></code></pre></div></td></tr></table></figure>
 <p>输入密码登陆成功<br>再修改密码为123456，</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;123456&#x27;;<br></code></pre></div></td></tr></table></figure>
