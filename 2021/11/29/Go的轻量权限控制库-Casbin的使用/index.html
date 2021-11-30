@@ -18,7 +18,7 @@
   <meta name="author" content="天涯过客">
   <meta name="keywords" content="">
   
-  <title>CentOS7安装图形化界面xfce4 - 天涯过客的个人博客</title>
+  <title>Go的轻量权限控制库-Casbin的使用 - 天涯过客的个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="CentOS7安装图形化界面xfce4">
+            <span class="h2" id="subtitle" title="Go的轻量权限控制库-Casbin的使用">
               
             </span>
 
@@ -178,8 +178,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-09-30 01:42" pubdate>
-        2021年9月30日 凌晨
+      <time datetime="2021-11-29 15:51" pubdate>
+        2021年11月29日 下午
       </time>
     </span>
   
@@ -190,7 +190,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      250 字
+      380 字
     </span>
   
 
@@ -200,7 +200,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3
+      5
        分钟
     </span>
   
@@ -238,28 +238,21 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">CentOS7安装图形化界面xfce4</h1>
+            <h1 style="display: none">Go的轻量权限控制库-Casbin的使用</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年9月30日 凌晨
+                  本文最后更新于：2021年11月29日 下午
                 
               </p>
             
             <div class="markdown-body">
-              <p>WSL2中的CentOS7没有图形化界面，很多人用不习惯，于是我们可以为CentOS7安装图形化界面。<br><strong>如果想在WSL2中装CentOS系统可看我的这篇文章<a target="_blank" rel="noopener" href="http://118.178.237.76/2021/09/20/WSL%E5%AE%89%E8%A3%85CentOS7/">WSL安装CentOS7</a></strong></p>
-<h3 id="更新yum源"><a href="#更新yum源" class="headerlink" title="更新yum源"></a>更新yum源</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">yum update<br>yum install epel-release <br></code></pre></div></td></tr></table></figure>
-<h3 id="安装X-WINDOWS"><a href="#安装X-WINDOWS" class="headerlink" title="安装X WINDOWS"></a>安装X WINDOWS</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">yum groupinstall <span class="hljs-string">&quot;X Window System&quot;</span> <br></code></pre></div></td></tr></table></figure>
-<p> 当出现 Complete！说明这里安装成功了。</p>
-<h3 id="安装xfce"><a href="#安装xfce" class="headerlink" title="安装xfce"></a>安装xfce</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">yum groupinstall xfce <br></code></pre></div></td></tr></table></figure>
-
-<p>执行<code>sudo systemctl isolate graphical.target</code>进入系统，但是不知道为什么，我这里无效</p>
-<h3 id="打开XLaunch"><a href="#打开XLaunch" class="headerlink" title="打开XLaunch"></a>打开XLaunch</h3><p><img src="https://img-blog.csdnimg.cn/10ae47f7a5224c918054e71a0894fabc.png" srcset="/img/loading.gif" lazyload alt="XLaunch"><br>注意第三步，这里要打勾</p>
-<p><img src="https://img-blog.csdnimg.cn/c8e06659c995481eada8e17820612a7d.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p6r6Iqx5rW3,size_20,color_FFFFFF,t_70,g_se,x_16" srcset="/img/loading.gif" lazyload><br>启动后啥也没有是正常的</p>
-<h3 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h3><p><code>xprofile</code>和<code>profile</code>文件中写入配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">vi /etc/profile  <span class="hljs-comment">##编辑/etc/profile文件</span><br><span class="hljs-comment">##添加如下内容</span><br><span class="hljs-built_in">alias</span> xfce4=<span class="hljs-string">&quot;. /etc/xprofile &amp;&amp; startxfce4&quot;</span><br><span class="hljs-built_in">export</span> DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk <span class="hljs-string">&#x27;&#123;print $2; exit;&#125;&#x27;</span>):0.0<br><span class="hljs-comment">#######################分割线##########################</span><br><br>vi /etc/xprofile  <span class="hljs-comment">##编辑/etc/xprofile文件</span><br><span class="hljs-comment">##添加如下内容</span><br><span class="hljs-built_in">export</span> LANG=zh_CN.UTF-8<br><span class="hljs-built_in">export</span> LANGUAGE=zh_CN:en_US<br><span class="hljs-built_in">export</span> LC_CTYPE=en_US.UTF-8<br><span class="hljs-built_in">export</span> GTK_IM_MODULE=fcitx<br><span class="hljs-built_in">export</span> QT_IM_MODULE=fcitx<br><span class="hljs-built_in">export</span> XMODIFIERS=<span class="hljs-string">&quot;@im=fcitx&quot;</span><br></code></pre></div></td></tr></table></figure>
-
-<p>此时重启系统，然后在终端输入<code>xfce4</code>就可启动桌面了</p>
+              <p><a target="_blank" rel="noopener" href="https://casbin.org/docs/zh-CN/get-started">casbin官网</a><br>实习的时候项目要求使用casbin来进行权限控制，因此简单记录下casbin的练手</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>截至<code>2021.11.29</code>日，<code>casbin</code>的最新版本为<code>v2</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">go get github.com/casbin/casbin/v2<br></code></pre></div></td></tr></table></figure>
+<h3 id="编写模型文件model-conf"><a href="#编写模型文件model-conf" class="headerlink" title="编写模型文件model.conf"></a>编写模型文件<code>model.conf</code></h3><figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go">[role_definition]<br>g = _, _<br><br>[request_definition]<br>r = sub, obj, act<br><br>[policy_definition]<br>p = sub, obj, act<br><br>[policy_effect]<br>e = some(where (p.eft == allow))<br><br>[matchers]<br>m = g(r.sub , p.sub) &amp;&amp; r.obj == p.obj &amp;&amp; r.act == p.act     <span class="hljs-comment">//r.sub必须属于p.sub,后面同理</span><br></code></pre></div></td></tr></table></figure>
+<h3 id="编写策略文件policy-csv"><a href="#编写策略文件policy-csv" class="headerlink" title="编写策略文件policy.csv"></a>编写策略文件policy.csv</h3><figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go">p, ops, <span class="hljs-string">&quot;/api/v1/cmdb/environment&quot;</span>, <span class="hljs-string">&quot;GET&quot;</span>  <span class="hljs-comment">//表示ops角色只能用GET方法访问该URL</span><br>g, zr, dev                                  <span class="hljs-comment">// 表示用户zr属于dev角色</span><br>g, lc, ops									<br>g, ops, dev				<span class="hljs-comment">// 表示角色ops也属于dev角色中的一种，类似于鸡属于鸟，麻雀也属于鸟</span><br>g, system, ops<br></code></pre></div></td></tr></table></figure>
+<h3 id="编写gin的中间件代码"><a href="#编写gin的中间件代码" class="headerlink" title="编写gin的中间件代码"></a>编写gin的中间件代码</h3><figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Casbin</span><span class="hljs-params">()</span> *<span class="hljs-title">casbin</span>.<span class="hljs-title">Enforcer</span></span> &#123;<br>	<span class="hljs-comment">//两个文件的路径均为相对于main.go的位置</span><br>	e, err := casbin.NewEnforcer(<span class="hljs-string">&quot;conf/casbin_model.conf&quot;</span>, <span class="hljs-string">&quot;conf/casbin_policy.csv&quot;</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;载入casbin出错:&quot;</span>,err)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>	&#125;<br>	err = e.LoadPolicy()<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;载入权限管理出错:&quot;</span>,err)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> e<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Ops</span><span class="hljs-params">()</span> <span class="hljs-title">gin</span>.<span class="hljs-title">HandlerFunc</span></span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>		u, exists := c.Get(<span class="hljs-string">&quot;userInfo&quot;</span>)<br>		<span class="hljs-keyword">if</span> !exists &#123;<br>			log.Errorf(<span class="hljs-string">&quot;获取用户失败&quot;</span>)<br>			c.JSON(<span class="hljs-number">200</span>,payload.FailurePayload(constant.COOKIE_ERROR, constant.COOKIE_ERROR_MSG))<br>			c.Abort()<br>		&#125;<br>		user := u.(sys.User)<br>		<br>		e := Casbin()<br>		ok, err := e.Enforce(user.Role, c.Request.URL.Path, c.Request.Method)<br>		<span class="hljs-keyword">if</span> ok &#123;<br>			log.Infof(<span class="hljs-string">&quot;角色为：%s,权限通过&quot;</span>,userModel.Role)<br>			c.Next()<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			log.Errorf(<span class="hljs-string">&quot;角色为：%s,权限不足&quot;</span>,userModel.Role)<br>			c.Abort()<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
             </div>
             <hr>
@@ -269,19 +262,10 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Linux/">Linux</a>
-                    
-                      <a class="hover-with-bg" href="/categories/Linux/CentOS/">CentOS</a>
+                      <a class="hover-with-bg" href="/categories/Go/">Go</a>
                     
                   </div>
                 
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
-                    
-                  </div>
                 
               </div>
               
@@ -296,9 +280,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/11/29/Go%E7%9A%84%E8%BD%BB%E9%87%8F%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E5%BA%93-Casbin%E7%9A%84%E4%BD%BF%E7%94%A8/">
+                      <a href="/2021/11/30/Go%E7%9A%84Channel%E6%80%BB%E7%BB%93/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Go的轻量权限控制库-Casbin的使用</span>
+                        <span class="hidden-mobile">Go的Channel总结</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -306,8 +290,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/09/26/10%E5%88%86%E9%92%9F%E7%9C%8B%E6%87%82Docker%E5%92%8CK8S/">
-                        <span class="hidden-mobile">10分钟看懂Docker和K8S</span>
+                      <a href="/2021/09/30/CentOS7%E5%AE%89%E8%A3%85%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%95%8C%E9%9D%A2xfce4/">
+                        <span class="hidden-mobile">CentOS7安装图形化界面xfce4</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
