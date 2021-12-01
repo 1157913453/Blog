@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgba(47,65,84,0.7)">
+  <meta name="description" content="">
+  <meta name="author" content="天涯过客">
+  <meta name="keywords" content="">
+  
+  <title>通过casbin实现RBAC权限设计(Mysql存储Policy) - 天涯过客的个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":true,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"0287da7553a05031a40655277f77c232","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"UryFueQ0QM8u13LtdEcy55Oa-gzGzoHsz","app_key":"lrLoQiKVouxnqfiXe8o8QYvk","server_url":"https://uryfueq0.lc-cn-n1-shared.com"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>天涯过客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/6.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="通过casbin实现RBAC权限设计(Mysql存储Policy)">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      天涯过客
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-01 19:34" pubdate>
+        2021年12月1日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      953 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">通过casbin实现RBAC权限设计(Mysql存储Policy)</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年12月1日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p><a target="_blank" rel="noopener" href="https://casbin.org/docs/zh-CN/get-started">casbin官网</a><br>实习的时候项目要求使用casbin来进行权限控制，因此简单记录下casbin的练手</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>截至<code>2021.11.29</code>日，<code>casbin</code>的最新版本为<code>v2</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">go get github.com/casbin/casbin/v2<br></code></pre></div></td></tr></table></figure>
+<h3 id="编写模型文件model-conf"><a href="#编写模型文件model-conf" class="headerlink" title="编写模型文件model.conf"></a>编写模型文件<code>model.conf</code></h3><figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go">[role_definition]<br>g = _, _, _<br><br>[request_definition]<br>r = sub, dom, obj, act       <span class="hljs-comment">//sub-用户，dom-域，obj-资源，act-操作</span><br><br>[policy_definition]<br>p = sub, dom, obj, act<br><br>[matchers]<br>m = g(r.sub, p.sub, r.dom) &amp;&amp; r.obj == p.obj &amp;&amp; r.act == p.act &amp;&amp; r.dom == p.dom<br><br>[policy_effect]<br>e = some(where (p.eft == allow))     <span class="hljs-comment">// 任意一条 policy rule 满足, 则最终结果为 allow</span><br></code></pre></div></td></tr></table></figure>
+<h3 id="持久化存储权限到mysql并初始化"><a href="#持久化存储权限到mysql并初始化" class="headerlink" title="持久化存储权限到mysql并初始化"></a>持久化存储权限到mysql并初始化</h3><figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Casbin</span><span class="hljs-params">()</span> *<span class="hljs-title">casbin</span>.<span class="hljs-title">Enforcer</span></span>&#123;<br>	a, _ := gormadapter.NewAdapter(<span class="hljs-string">&quot;mysql&quot;</span>, <span class="hljs-string">&quot;user_name:user_passwd@tcp(127.0.0.1:3306)/&quot;</span>) <span class="hljs-comment">// Your driver and data source.</span><br>	e, err := casbin.NewEnforcer(<span class="hljs-string">&quot;./model.conf&quot;</span>, a)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatal(<span class="hljs-string">&quot;载入casbin配置出错&quot;</span>)<br>	&#125;<br><br>	e.LoadPolicy() <span class="hljs-comment">// 从数据库载入配置</span><br>	<span class="hljs-keyword">return</span> e<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">InitCasbin</span><span class="hljs-params">()</span><span class="hljs-params">(e *casbin.Enforcer ,err error)</span></span> &#123;<br>	e = Casbin()<br>	gh_dev, gh, data1, read, write, hh_dev, hh_admin, system, gh_admin,hh,data2,zr,gp,lc,mdw,pzc := <span class="hljs-string">&quot;gh_dev&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>,<span class="hljs-string">&quot;data1&quot;</span>,<span class="hljs-string">&quot;read&quot;</span>,<span class="hljs-string">&quot;write&quot;</span>,<span class="hljs-string">&quot;hh_dev&quot;</span>,<span class="hljs-string">&quot;hh_admin&quot;</span>,<span class="hljs-string">&quot;system&quot;</span>,<span class="hljs-string">&quot;gh_admin&quot;</span>,<span class="hljs-string">&quot;hh&quot;</span>,<span class="hljs-string">&quot;data2&quot;</span>,<span class="hljs-string">&quot;zr&quot;</span>,<span class="hljs-string">&quot;gp&quot;</span>,<span class="hljs-string">&quot;lc&quot;</span>,<span class="hljs-string">&quot;mdw&quot;</span>,<span class="hljs-string">&quot;pzc&quot;</span><br><br>	p_pilicies := [][]<span class="hljs-keyword">string</span>&#123;<br>		&#123;gh_dev, gh, data1, read&#125;,<br>		&#123;gh_dev, gh, data1, write&#125;,<br>		&#123;hh_dev, hh, data1, read&#125;,<br>		&#123;hh_dev, hh, data1, write&#125;,<br>		&#123;gh_admin, gh, data2, read&#125;,<br>		&#123;hh_admin, hh, data2, read&#125;,<br>		&#123;system, gh, data1, read&#125;,<br>		&#123;system, gh, data1, write&#125;,<br>		&#123;system, gh, data2, read&#125;,<br>		&#123;system, gh, data2, write&#125;,<br>		&#123;system, hh, data1, read&#125;,<br>		&#123;system, hh, data1, write&#125;,<br>		&#123;system, hh, data2, read&#125;,<br>		&#123;system, hh, data2, write&#125;,<br>	&#125;<br>	g_pilicies := [][]<span class="hljs-keyword">string</span>&#123;<br>		&#123;gh_admin, gh_dev, gh&#125;,<br>		&#123;hh_admin, hh_dev, hh&#125;,<br>		&#123;zr, gh_dev, gh&#125;,<br>		&#123;lc, gh_admin, gh&#125;,<br>		&#123;mdw, hh_dev, hh&#125;,<br>		&#123;pzc, hh_admin,hh&#125;,<br>		&#123;gp, system, gh&#125;,<br>		&#123;gp, system, hh&#125;,<br>	&#125;<br><br>	_, err = e.AddPolicies(p_pilicies)                 <br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;添加p失败,错误：%v&quot;</span>,err)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err<br>	&#125;<br>	_, err = e.AddGroupingPolicies(g_pilicies)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;添加g失败,错误：%v&quot;</span>,err)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err<br>	&#125;<br>	<span class="hljs-keyword">return</span> e,<span class="hljs-literal">nil</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3 id="编写检查权限函数"><a href="#编写检查权限函数" class="headerlink" title="编写检查权限函数"></a>编写检查权限函数</h3><figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">check</span><span class="hljs-params">(e *casbin.Enforcer, sub, dom, obj, act <span class="hljs-keyword">string</span>)</span></span> &#123;<br>	ok, _ := e.Enforce(sub, dom, obj, act)<br>	<span class="hljs-keyword">if</span> ok &#123;<br>		fmt.Printf(<span class="hljs-string">&quot;%s的%s对%s有%s权限\n&quot;</span>,dom, sub, obj, act)<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		fmt.Printf(<span class="hljs-string">&quot;权限不足：%s的%s对%s没有%s权限\n&quot;</span>,dom, sub, obj, act)<br>	&#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3 id="main函数"><a href="#main函数" class="headerlink" title="main函数"></a>main函数</h3><figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	e, err := InitCasbin()            <span class="hljs-comment">// 初始化casbin</span><br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;初始化失败，err:%v&quot;</span>,err)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br><br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;data1&quot;</span>,<span class="hljs-string">&quot;write&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;data2&quot;</span>,<span class="hljs-string">&quot;read&quot;</span>)  <span class="hljs-comment">//没有权限</span><br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;hh&quot;</span>, <span class="hljs-string">&quot;data1&quot;</span>,<span class="hljs-string">&quot;read&quot;</span>)  <span class="hljs-comment">//没有权限</span><br>	check(e, <span class="hljs-string">&quot;lc&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;data1&quot;</span>,<span class="hljs-string">&quot;read&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;lc&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;data2&quot;</span>,<span class="hljs-string">&quot;read&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;lc&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;data2&quot;</span>,<span class="hljs-string">&quot;write&quot;</span>)  <span class="hljs-comment">//没有权限</span><br>	check(e, <span class="hljs-string">&quot;mdw&quot;</span>, <span class="hljs-string">&quot;hh&quot;</span>, <span class="hljs-string">&quot;data1&quot;</span>, <span class="hljs-string">&quot;write&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;pzc&quot;</span>,<span class="hljs-string">&quot;hh&quot;</span>,<span class="hljs-string">&quot;data2&quot;</span>,<span class="hljs-string">&quot;read&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;pzc&quot;</span>,<span class="hljs-string">&quot;hh&quot;</span>,<span class="hljs-string">&quot;data2&quot;</span>,<span class="hljs-string">&quot;write&quot;</span>)  <span class="hljs-comment">//没有权限</span><br>	check(e, <span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;hh&quot;</span>, <span class="hljs-string">&quot;data2&quot;</span>,<span class="hljs-string">&quot;write&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;data1&quot;</span>,<span class="hljs-string">&quot;read&quot;</span>)<br>	e.AddPolicy(<span class="hljs-string">&quot;zr&quot;</span>,<span class="hljs-string">&quot;gh&quot;</span>,<span class="hljs-string">&quot;data2&quot;</span>,<span class="hljs-string">&quot;read&quot;</span>)  <span class="hljs-comment">//为zr添加gh的data2的read权限</span><br>	e.AddGroupingPolicy(<span class="hljs-string">&quot;周杰伦&quot;</span>,<span class="hljs-string">&quot;gh_admin&quot;</span>,<span class="hljs-string">&quot;gh&quot;</span>)			<span class="hljs-comment">// 为周杰伦添加gh的admin角色</span><br>	fmt.Println(<span class="hljs-string">&quot;-------添加权限后-----------&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;data2&quot;</span>, <span class="hljs-string">&quot;read&quot;</span>) <span class="hljs-comment">// 有权限</span><br>	check(e, <span class="hljs-string">&quot;周杰伦&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;data2&quot;</span>, <span class="hljs-string">&quot;read&quot;</span>) <span class="hljs-comment">// 有权限</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go">gh的zr对data1有write权限<br>权限不足：gh的zr对data2没有read权限<br>权限不足：hh的zr对data1没有read权限<br>gh的lc对data1有read权限<br>gh的lc对data2有read权限<br>权限不足：gh的lc对data2没有write权限<br>hh的mdw对data1有write权限<br>hh的pzc对data2有read权限<br>权限不足：hh的pzc对data2没有write权限<br>hh的system对data2有write权限<br>gh的system对data1有read权限<br>-------添加权限后-----------<br>gh的zr对data2有read权限<br>gh的周杰伦对data2有read权限<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/1157913453/Casbin-demo">Git仓库地址</a></p>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Go/">Go</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/01/Go%E7%9A%84Goroutine/">
+                        <span class="hidden-mobile">Go的Goroutine</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"UryFueQ0QM8u13LtdEcy55Oa-gzGzoHsz","appKey":"lrLoQiKVouxnqfiXe8o8QYvk","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        浙ICP备2021030557号
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" alt="police-icon"/>
+            
+            <span>京公网安备12345678号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    
+      <script  src="/js/img-lazyload.js" ></script>
+    
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?0287da7553a05031a40655277f77c232";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
