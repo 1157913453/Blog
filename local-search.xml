@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>WSL2安装CentOS7和Xfce4桌面</title>
+    <link href="/2021/12/05/WSL2%E5%AE%89%E8%A3%85CentOS7%E5%92%8CXfce4%E6%A1%8C%E9%9D%A2/"/>
+    <url>/2021/12/05/WSL2%E5%AE%89%E8%A3%85CentOS7%E5%92%8CXfce4%E6%A1%8C%E9%9D%A2/</url>
+    
+    <content type="html"><![CDATA[<p>由于工作和学习需要，需要在WSL中安装和配置CentOS7系统</p><h2 id="1-安装和升级WSL"><a href="#1-安装和升级WSL" class="headerlink" title="1.安装和升级WSL"></a>1.安装和升级WSL</h2><p>安装和升级WSL方法可看<a href="https://docs.microsoft.com/zh-cn/windows/wsl/install-win10">微软官方教程</a><br>本人是将电脑中的WSL升级到了WSL2</p><h2 id="2-下载安装CentOS镜像"><a href="#2-下载安装CentOS镜像" class="headerlink" title="2.下载安装CentOS镜像"></a>2.下载安装CentOS镜像</h2><p>首先需要下载CentOS7镜像，下面两个网站都可下载CentOS镜像，选择其中一个进行下载即可<br><a href="https://github.com/mishamosher/CentOS-WSL/releases">https://github.com/mishamosher/CentOS-WSL/releases</a><br><a href="https://github.com/wsldl-pg/CentWSL/releases">https://github.com/wsldl-pg/CentWSL/releases</a><br>本人下载的是其中CentOS7的最新版本<br>解压出来后双击其中的CentOS7.exe，静静等待安装完成即可</p><h2 id="3-安装Xfce4桌面"><a href="#3-安装Xfce4桌面" class="headerlink" title="3.安装Xfce4桌面"></a>3.安装Xfce4桌面</h2><h4 id="1-安装Xfce4"><a href="#1-安装Xfce4" class="headerlink" title="1.安装Xfce4"></a>1.安装Xfce4</h4><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo yum install -y epel-release<br><br>sudo yum groupinstall -y <span class="hljs-string">&quot;Xfce&quot;</span><br></code></pre></div></td></tr></table></figure><ul><li><p>如果遇到报错<code>Error getting repository data for epel, repository not found</code>,报错原因：</p><blockquote><p>系统中未启用 RHEL/CentOS 7.x/6.x/5.x 的 EPEL 存储库。<br>EPEL 代表企业 Linux 及其在线分布式的额外软件包，可以由 yum 程序自动下载和安装。<br>只要启用了此选项，错误就会解决</p></blockquote></li><li><p>解决办法：</p><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 如果没有安装 wget 需要先  yum install wget</span><br>wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm<br>rpm -ivh epel-release-latest-7.noarch.rpm<br></code></pre></div></td></tr></table></figure></li></ul><h4 id="2-重启WSL"><a href="#2-重启WSL" class="headerlink" title="2.重启WSL"></a>2.重启WSL</h4><p>在powershell中执行下面命令</p><figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell">wsl -<span class="hljs-literal">-shutdonw</span><br></code></pre></div></td></tr></table></figure><h4 id="3-Win10安装VcXsrv，启动VcXsrv"><a href="#3-Win10安装VcXsrv，启动VcXsrv" class="headerlink" title="3.Win10安装VcXsrv，启动VcXsrv"></a>3.Win10安装VcXsrv，启动VcXsrv</h4><p>直接默认配置，但是第三页设置为下图：<br><img src="https://img-blog.csdnimg.cn/84043b4ce7b148f3a1f6f9659f14431f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5p6r6Iqx5rW3,size_19,color_FFFFFF,t_70,g_se,x_16#pic_center" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p><h2 id="4-配置Xfce4"><a href="#4-配置Xfce4" class="headerlink" title="4.配置Xfce4"></a>4.配置Xfce4</h2><p><code>vi ~/.bashrc</code>打开<code>bashrc</code>文件在最后面加上下面代码</p><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> windows_host=`ipconfig.exe | grep -n4 WSL | tail -n 1 | awk -F<span class="hljs-string">&quot;:&quot;</span> <span class="hljs-string">&#x27;&#123; print $2 &#125;&#x27;</span> | sed <span class="hljs-string">&#x27;s/^[ \r\n\t]*//;s/[ \r\n\t]*$//&#x27;</span>`<br><br><span class="hljs-built_in">export</span> DISPLAY=<span class="hljs-variable">$windows_host</span>:0x<br></code></pre></div></td></tr></table></figure><p>最后执行<code>startxfce4</code>就行了</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+      <category>CentOS7</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>通过casbin实现RBAC权限设计(Mysql存储Policy)</title>
     <link href="/2021/12/01/%E9%80%9A%E8%BF%87casbin%E5%AE%9E%E7%8E%B0RBAC%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1-Mysql%E5%AD%98%E5%82%A8Policy/"/>
     <url>/2021/12/01/%E9%80%9A%E8%BF%87casbin%E5%AE%9E%E7%8E%B0RBAC%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1-Mysql%E5%AD%98%E5%82%A8Policy/</url>
@@ -17,6 +44,12 @@
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Go</tag>
+      
+    </tags>
     
   </entry>
   
@@ -37,6 +70,12 @@
     </categories>
     
     
+    <tags>
+      
+      <tag>Go</tag>
+      
+    </tags>
+    
   </entry>
   
   
@@ -55,6 +94,12 @@
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Go</tag>
+      
+    </tags>
     
   </entry>
   
@@ -75,6 +120,12 @@
     </categories>
     
     
+    <tags>
+      
+      <tag>Go</tag>
+      
+    </tags>
+    
   </entry>
   
   
@@ -91,7 +142,7 @@
       
       <category>Linux</category>
       
-      <category>CentOS</category>
+      <category>CentOS7</category>
       
     </categories>
     
@@ -123,9 +174,9 @@
     
     <tags>
       
-      <tag>linux</tag>
-      
       <tag>容器</tag>
+      
+      <tag>Linux</tag>
       
     </tags>
     
@@ -172,7 +223,7 @@
       
       <category>Linux</category>
       
-      <category>CentOS</category>
+      <category>CentOS7</category>
       
     </categories>
     
@@ -199,7 +250,7 @@
       
       <category>Linux</category>
       
-      <category>CentOS</category>
+      <category>CentOS7</category>
       
     </categories>
     
@@ -209,6 +260,8 @@
       <tag>Linux</tag>
       
       <tag>MySQL</tag>
+      
+      <tag>CentOS7</tag>
       
     </tags>
     
@@ -228,34 +281,7 @@
       
       <category>Linux</category>
       
-      <category>CentOS</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Linux</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>WSL安装CentOS7</title>
-    <link href="/2021/09/20/WSL%E5%AE%89%E8%A3%85CentOS7/"/>
-    <url>/2021/09/20/WSL%E5%AE%89%E8%A3%85CentOS7/</url>
-    
-    <content type="html"><![CDATA[<p>由于工作和学习需要，需要在WSL中安装和配置CentOS7系统</p><h2 id="1-安装和升级WSL"><a href="#1-安装和升级WSL" class="headerlink" title="1.安装和升级WSL"></a>1.安装和升级WSL</h2><p>安装和升级WSL方法可看<a href="https://docs.microsoft.com/zh-cn/windows/wsl/install-win10">微软官方教程</a><br>本人是将电脑中的WSL升级到了WSL2</p><h2 id="2-下载安装CentOS镜像"><a href="#2-下载安装CentOS镜像" class="headerlink" title="2.下载安装CentOS镜像"></a>2.下载安装CentOS镜像</h2><p>首先需要下载CentOS7镜像，下面两个网站都可下载CentOS镜像，选择其中一个进行下载即可<br><a href="https://github.com/mishamosher/CentOS-WSL/releases">https://github.com/mishamosher/CentOS-WSL/releases</a><br><a href="https://github.com/wsldl-pg/CentWSL/releases">https://github.com/wsldl-pg/CentWSL/releases</a><br>本人下载的是其中CentOS7的最新版本<br>解压出来后双击其中的CentOS7.exe，静静等待安装完成即可</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>Linux</category>
-      
-      <category>CentOS</category>
+      <category>CentOS7</category>
       
     </categories>
     
@@ -282,7 +308,7 @@
       
       <category>Linux</category>
       
-      <category>CentOS</category>
+      <category>CentOS7</category>
       
     </categories>
     

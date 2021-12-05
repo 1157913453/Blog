@@ -182,20 +182,21 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/09/20/WSL%E5%AE%89%E8%A3%85CentOS7/" target="_self">
-          WSL安装CentOS7
+        <a href="/2021/09/20/CentOS7%E9%85%8D%E7%BD%AE%E9%98%BF%E9%87%8C%E6%BA%90/" target="_self">
+          CentOS7配置阿里源
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/09/20/WSL%E5%AE%89%E8%A3%85CentOS7/" target="_self">
+        <a href="/2021/09/20/CentOS7%E9%85%8D%E7%BD%AE%E9%98%BF%E9%87%8C%E6%BA%90/" target="_self">
           
           
             
           
-          由于工作和学习需要，需要在WSL中安装和配置CentOS7系统
-1.安装和升级WSL安装和升级WSL方法可看微软官方教程本人是将电脑中的WSL升级到了WSL2
-2.下载安装CentOS镜像首先需要下载CentOS7镜像，下面两个网站都可下载CentOS镜像，选择其中一个进行下载即可https://github.com/mishamosher/CentOS-WSL/releaseshttps://g
+          1.备份原来的文件1mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+2.下载阿里云源文件用该命令下载阿里云源文件
+1wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+如果下
         </a>
       </p>
 
@@ -203,7 +204,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2021-09-20 16:28" pubdate>
+            <time datetime="2021-09-20 16:42" pubdate>
               2021-09-20
             </time>
           </div>
@@ -214,7 +215,7 @@
             
               <a href="/categories/Linux/">Linux</a>
             
-              <a href="/categories/Linux/CentOS/">CentOS</a>
+              <a href="/categories/Linux/CentOS7/">CentOS7</a>
             
           </div>
         
@@ -270,7 +271,7 @@
             
               <a href="/categories/Linux/">Linux</a>
             
-              <a href="/categories/Linux/CentOS/">CentOS</a>
+              <a href="/categories/Linux/CentOS7/">CentOS7</a>
             
           </div>
         

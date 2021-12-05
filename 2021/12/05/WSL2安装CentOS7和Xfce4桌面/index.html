@@ -18,7 +18,7 @@
   <meta name="author" content="天涯过客">
   <meta name="keywords" content="">
   
-  <title>从零开始在云服务器搭建Hexo个人博客 - 天涯过客的个人博客</title>
+  <title>WSL2安装CentOS7和Xfce4桌面 - 天涯过客的个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="从零开始在云服务器搭建Hexo个人博客">
+            <span class="h2" id="subtitle" title="WSL2安装CentOS7和Xfce4桌面">
               
             </span>
 
@@ -178,8 +178,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-09-20 16:27" pubdate>
-        2021年9月20日 下午
+      <time datetime="2021-12-05 13:58" pubdate>
+        2021年12月5日 下午
       </time>
     </span>
   
@@ -190,7 +190,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      587 字
+      383 字
     </span>
   
 
@@ -200,7 +200,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      5
        分钟
     </span>
   
@@ -238,7 +238,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">从零开始在云服务器搭建Hexo个人博客</h1>
+            <h1 style="display: none">WSL2安装CentOS7和Xfce4桌面</h1>
             
               <p class="note note-info">
                 
@@ -247,47 +247,27 @@
               </p>
             
             <div class="markdown-body">
-              <h3 id="1-购买服务器"><a href="#1-购买服务器" class="headerlink" title="1.购买服务器"></a>1.购买服务器</h3><p>首先需要有服务器，也可以在github pages或者gitee pages上部署，我服务器安装的是centos7.6系统；接下来是选择博客框架，看了网上相关推荐和教程，我最终决定用Hexo来搭建博客</p>
-<h3 id="2-安装Hexo"><a href="#2-安装Hexo" class="headerlink" title="2.安装Hexo"></a>2.安装Hexo</h3><p>因为Hexo依赖node.js，因此推荐安装nvm来管理node.js版本</p>
-<ul>
-<li><p>安装nvm<br>  <a target="_blank" rel="noopener" href="https://hub.fastgit.org/coreybutler/nvm-windows/releases">点此下载nvm</a>或者直接执行下面这行命令(当前最新版为0.38)</p>
-  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">wget -qO- https:<span class="hljs-regexp">//</span>raw.githubusercontent.com<span class="hljs-regexp">/nvm-sh/</span>nvm<span class="hljs-regexp">/v0.38.0/i</span>nstall.sh | bash  <span class="hljs-comment">##下载并安装nvm</span><br><br>source ~/.bashrc    <br></code></pre></div></td></tr></table></figure>
-<p>  最后执行<code>nvm version</code>看到显示了如<code>v16.9.1</code>类似的版本号则为安装成功</p>
-</li>
-<li><p>安装node.js<br>  先后执行以下命令</p>
-  <figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">nvm</span> install node  ##安装最新版node.js，当前最新版本为v<span class="hljs-number">16</span>.<span class="hljs-number">9</span>.<span class="hljs-number">1</span><br><br><span class="hljs-attribute">nvm</span> use v<span class="hljs-number">16</span>.<span class="hljs-number">9</span>.<span class="hljs-number">1</span>  	##切换到该node版本<br></code></pre></div></td></tr></table></figure></li>
-<li><p>安装Git</p>
-  <figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake">	Windows：下载并安装 git.<br>Mac：使用 Homebrew, MacPorts 或者下载 安装程序。<br>Linux (Ubuntu, Debian)：sudo apt-get <span class="hljs-keyword">install</span> git-core<br>Linux (Fedora, Red Hat, CentOS)：sudo yum <span class="hljs-keyword">install</span> git-core<br></code></pre></div></td></tr></table></figure></li>
-<li><p>安装Hexo</p>
-  <figure class="highlight avrasm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs avrasm">npm install -g hexo-<span class="hljs-keyword">cli</span><br></code></pre></div></td></tr></table></figure>
-<p>  创建存放博客文件的目录</p>
-  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/root/</span>hexo<br></code></pre></div></td></tr></table></figure>
-<p>  初始化</p>
-  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">hexo init <span class="hljs-regexp">/root/</span>hexo<br></code></pre></div></td></tr></table></figure>
-<p>  然后进入该目录，安装依赖</p>
-  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">cd <span class="hljs-regexp">/root/</span>hexo<br><br>npm i<br></code></pre></div></td></tr></table></figure>
-<p>  则会得到这样的目录：</p>
-  <figure class="highlight gradle"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gradle">├── _config.yml<br>├── <span class="hljs-keyword">package</span>.json<br>├── scaffolds<br>├── <span class="hljs-keyword">source</span><br>|   └── _posts<br>└── themes<br></code></pre></div></td></tr></table></figure>
+              <p>由于工作和学习需要，需要在WSL中安装和配置CentOS7系统</p>
+<h2 id="1-安装和升级WSL"><a href="#1-安装和升级WSL" class="headerlink" title="1.安装和升级WSL"></a>1.安装和升级WSL</h2><p>安装和升级WSL方法可看<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/wsl/install-win10">微软官方教程</a><br>本人是将电脑中的WSL升级到了WSL2</p>
+<h2 id="2-下载安装CentOS镜像"><a href="#2-下载安装CentOS镜像" class="headerlink" title="2.下载安装CentOS镜像"></a>2.下载安装CentOS镜像</h2><p>首先需要下载CentOS7镜像，下面两个网站都可下载CentOS镜像，选择其中一个进行下载即可<br><a target="_blank" rel="noopener" href="https://github.com/mishamosher/CentOS-WSL/releases">https://github.com/mishamosher/CentOS-WSL/releases</a><br><a target="_blank" rel="noopener" href="https://github.com/wsldl-pg/CentWSL/releases">https://github.com/wsldl-pg/CentWSL/releases</a><br>本人下载的是其中CentOS7的最新版本<br>解压出来后双击其中的CentOS7.exe，静静等待安装完成即可</p>
+<h2 id="3-安装Xfce4桌面"><a href="#3-安装Xfce4桌面" class="headerlink" title="3.安装Xfce4桌面"></a>3.安装Xfce4桌面</h2><h4 id="1-安装Xfce4"><a href="#1-安装Xfce4" class="headerlink" title="1.安装Xfce4"></a>1.安装Xfce4</h4><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo yum install -y epel-release<br><br>sudo yum groupinstall -y <span class="hljs-string">&quot;Xfce&quot;</span><br></code></pre></div></td></tr></table></figure>
 
-<p>   然后执行<code>hexo -g</code>生成静态文件<br>   然后自己选择一个自己喜欢的<code>hexo</code>主题放进<code>themes</code>文件夹中配置好，配置主题的教程这里就不放了，网上一堆。</p>
-<p>   再执行</p>
-   <figure class="highlight axapta"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs axapta">hexo <span class="hljs-keyword">server</span><br></code></pre></div></td></tr></table></figure>
-<p> 就能在浏览器中输入<code>xxxx:4000</code>就能访问网站了<br>  ps：<code>其中xxxx指服务器的ip，hexo的默认端口应该是4000</code></p>
-<h3 id="3-安装并配置nginx"><a href="#3-安装并配置nginx" class="headerlink" title="3. 安装并配置nginx"></a>3. 安装并配置nginx</h3></li>
-<li><p>安装nginx</p>
-<p>  更新yum信息</p>
-  <figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">yum update</span><br></code></pre></div></td></tr></table></figure>
-<p>  下载nginx</p>
-  <figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake">yum <span class="hljs-keyword">install</span> nginx<br></code></pre></div></td></tr></table></figure></li>
-<li><p>配置nginx</p>
-  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/</span>nginx<span class="hljs-regexp">/nginx.conf.  /</span><span class="hljs-regexp">/打开nginx的配置文件</span><br></code></pre></div></td></tr></table></figure>
-<p>  可以看到以下内容，</p>
-  <figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk"><span class="hljs-comment">## For more information on configuration, see:</span><br><span class="hljs-comment">#   * Official English Documentation: http://nginx.org/en/docs/</span><br><span class="hljs-comment">#   * Official Russian Documentation: http://nginx.org/ru/docs/</span><br><br>user root;   <span class="hljs-regexp">//</span>第五行这里改为root<br>-------------------------------分 割 线------------------------------------------<br> server &#123;<br>       listen       <span class="hljs-number">80</span>;<br>       listen       [::]:<span class="hljs-number">80</span>;       <br>       server_name  zrgo.top;          <span class="hljs-regexp">//</span>这里如果你有域名就填上你服务器绑定的域名,没有就默认<br>       root         <span class="hljs-regexp">/root/</span>hexo<span class="hljs-regexp">/public;    /</span><span class="hljs-regexp">/这里填你Hexo中blog的html文件存放地址</span><br></code></pre></div></td></tr></table></figure>
-<p>  重启nginx服务</p>
-  <figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">nginx -s reload</span><br></code></pre></div></td></tr></table></figure>
-<p>  现在直接在浏览器中输入你的域名或者服务器ip地址就能看到你的博客网站了！</p>
+<ul>
+<li><p>如果遇到报错<code>Error getting repository data for epel, repository not found</code>,报错原因：</p>
+<blockquote>
+<p>系统中未启用 RHEL/CentOS 7.x/6.x/5.x 的 EPEL 存储库。<br>EPEL 代表企业 Linux 及其在线分布式的额外软件包，可以由 yum 程序自动下载和安装。<br>只要启用了此选项，错误就会解决</p>
+</blockquote>
 </li>
+<li><p>解决办法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 如果没有安装 wget 需要先  yum install wget</span><br>wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm<br>rpm -ivh epel-release-latest-7.noarch.rpm<br></code></pre></div></td></tr></table></figure></li>
 </ul>
+<h4 id="2-重启WSL"><a href="#2-重启WSL" class="headerlink" title="2.重启WSL"></a>2.重启WSL</h4><p>在powershell中执行下面命令</p>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell">wsl -<span class="hljs-literal">-shutdonw</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="3-Win10安装VcXsrv，启动VcXsrv"><a href="#3-Win10安装VcXsrv，启动VcXsrv" class="headerlink" title="3.Win10安装VcXsrv，启动VcXsrv"></a>3.Win10安装VcXsrv，启动VcXsrv</h4><p>直接默认配置，但是第三页设置为下图：<br><img src="https://img-blog.csdnimg.cn/84043b4ce7b148f3a1f6f9659f14431f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5p6r6Iqx5rW3,size_19,color_FFFFFF,t_70,g_se,x_16#pic_center" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h2 id="4-配置Xfce4"><a href="#4-配置Xfce4" class="headerlink" title="4.配置Xfce4"></a>4.配置Xfce4</h2><p><code>vi ~/.bashrc</code>打开<code>bashrc</code>文件在最后面加上下面代码</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> windows_host=`ipconfig.exe | grep -n4 WSL | tail -n 1 | awk -F<span class="hljs-string">&quot;:&quot;</span> <span class="hljs-string">&#x27;&#123; print $2 &#125;&#x27;</span> | sed <span class="hljs-string">&#x27;s/^[ \r\n\t]*//;s/[ \r\n\t]*$//&#x27;</span>`<br><br><span class="hljs-built_in">export</span> DISPLAY=<span class="hljs-variable">$windows_host</span>:0x<br></code></pre></div></td></tr></table></figure>
+<p>最后执行<code>startxfce4</code>就行了</p>
 
             </div>
             <hr>
@@ -324,15 +304,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/09/20/CentOS7%E9%85%8D%E7%BD%AE%E9%98%BF%E9%87%8C%E6%BA%90/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CentOS7配置阿里源</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2021/12/01/%E9%80%9A%E8%BF%87casbin%E5%AE%9E%E7%8E%B0RBAC%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1-Mysql%E5%AD%98%E5%82%A8Policy/">
+                        <span class="hidden-mobile">通过casbin实现RBAC权限设计(Mysql存储Policy)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
