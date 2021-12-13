@@ -182,6 +182,117 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/12/13/%E8%AE%B0%E5%BD%95%E5%B7%A5%E4%BD%9C%E4%B8%AD%E4%BD%BF%E7%94%A8sqlmock%E5%92%8Cgorm%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" target="_self">
+          记录工作中使用sqlmock和gorm遇到的一些问题
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/12/13/%E8%AE%B0%E5%BD%95%E5%B7%A5%E4%BD%9C%E4%B8%AD%E4%BD%BF%E7%94%A8sqlmock%E5%92%8Cgorm%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" target="_self">
+          
+          
+            
+          
+          正则匹配
+sqlmock中默认使用的是正则表达式去匹配sql语句如sqlmock.ExpectQuery()和sqlmock.ExpectExec()等，如果想直接匹配sql语句需要加上regexp.QuoteMeta()例子:1234//这个是使用正则来匹配sql语句，需要使用“\\”来转义字符mock.ExpectQuery(&quot;SELECT \\* FROM `cmdb_app` W
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-12-13 09:10" pubdate>
+              2021-12-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Go/">Go</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Go/">Go</a>
+            
+              <a href="/tags/sqlmock/">sqlmock</a>
+            
+              <a href="/tags/%E6%B5%8B%E8%AF%95/">测试</a>
+            
+              <a href="/tags/gorm/">gorm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/12/10/Go%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" target="_self">
+          Go的常用设计模式
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/12/10/Go%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" target="_self">
+          
+          
+            
+          
+          好记性不如烂笔头，学习编程的最好方式就是自己把代码动手敲一遍
+1.策略模式（strategy）在实际应用中， 我们对不同的场景要采取不同的应对措施，也就是不同的策略。定义一个接口，传入的不同对象实现了接口，因此自动调用对应的策略其中strategy.go:
+12345678910111213141516171819202122232425262728293031323334353637383940
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-12-10 18:42" pubdate>
+              2021-12-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Go/">Go</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Go/">Go</a>
+            
+              <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/12/05/WSL2%E5%AE%89%E8%A3%85CentOS7%E5%92%8CXfce4%E6%A1%8C%E9%9D%A2/" target="_self">
           WSL2安装CentOS7和Xfce4桌面
         </a>
@@ -247,10 +358,10 @@
           
             
           
-          casbin官网实习的时候项目要求使用casbin来进行权限控制，因此简单记录下casbin的练手
+          casbin官网简单记录下casbin的练手
 安装截至2021.11.29日，casbin的最新版本为v2
 1go get github.com/casbin/casbin/v2
-编写模型文件model.conf1234567891011121314[role_definition]g = _, _, _[request_definition]
+编写模型文件model.conf1234567891011121314[role_definition]g = _, _, _[request_definition]r = sub, dom, obj, act     
         </a>
       </p>
 
@@ -604,119 +715,6 @@ LXC，就是Linux容器虚拟技术（Linux container）
               <a href="/tags/Linux/">Linux</a>
             
               <a href="/tags/MySQL/">MySQL</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/09/20/WSL%E7%9A%84CentOS7%E6%8A%A5%E9%94%99Failed-to-get-D-Bus-connection-Operation-not-permitted%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
-          WSL的CentOS7报错Failed to get D-Bus connection: Operation not permitted解决办法
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/20/WSL%E7%9A%84CentOS7%E6%8A%A5%E9%94%99Failed-to-get-D-Bus-connection-Operation-not-permitted%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
-          
-          
-            
-          
-          WSL的CentOS7使用systemctl和service命令时报错Failed to get D-Bus connection: Operation not permitted,解决办法是更换systemctl文件首先备份systemctl文件
-1mv /usr/bin/systemctl /usr/bin/systemctl.old
-然后执行
-1curl https://raw.github
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-09-20 16:45" pubdate>
-              2021-09-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Linux/">Linux</a>
-            
-              <a href="/categories/Linux/CentOS7/">CentOS7</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">Linux</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/09/20/CentOS7%E5%AE%89%E8%A3%85MySQL5-7/" target="_self">
-          CentOS7安装MySQL5.7
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/20/CentOS7%E5%AE%89%E8%A3%85MySQL5-7/" target="_self">
-          
-          
-            
-          
-          1.下载MySQL安装包 1wget https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
-安装MySQL源 1yum -y localinstall mysql57-community-release-el7-11.noarch.rpm 
-2.在线安装MySQL1yum -y install mysql-com
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-09-20 16:43" pubdate>
-              2021-09-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Linux/">Linux</a>
-            
-              <a href="/categories/Linux/CentOS7/">CentOS7</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">Linux</a>
-            
-              <a href="/tags/MySQL/">MySQL</a>
-            
-              <a href="/tags/CentOS7/">CentOS7</a>
             
           </div>
         
