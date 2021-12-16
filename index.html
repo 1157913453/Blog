@@ -182,6 +182,60 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/12/16/%E4%BD%BF%E7%94%A8%E5%AE%B9%E5%99%A8%E6%90%AD%E5%BB%BAMySQL8-0%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" target="_self">
+          使用容器搭建MySQL8.0的主从复制
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/12/16/%E4%BD%BF%E7%94%A8%E5%AE%B9%E5%99%A8%E6%90%AD%E5%BB%BAMySQL8-0%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" target="_self">
+          
+          
+            
+          
+          首先启动两个容器12345## 主数据库docker run -itd --name mysql-master -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql## 从数据库docker run -itd --name mysql-slave -p 3307:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
+
+配置ma
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-12-16 18:47" pubdate>
+              2021-12-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/MySQL/">MySQL</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8/">容器</a>
+            
+              <a href="/tags/MySQL/">MySQL</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/12/13/%E8%AE%B0%E5%BD%95%E5%B7%A5%E4%BD%9C%E4%B8%AD%E4%BD%BF%E7%94%A8sqlmock%E5%92%8Cgorm%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" target="_self">
           记录工作中使用sqlmock和gorm遇到的一些问题
         </a>
@@ -658,63 +712,6 @@ LXC，就是Linux容器虚拟技术（Linux container）
               <a href="/tags/%E5%AE%B9%E5%99%A8/">容器</a>
             
               <a href="/tags/Linux/">Linux</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/09/20/%E5%AE%89%E8%A3%85MySQL5-7%E6%B2%A1%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" target="_self">
-          安装MySQL5.7没设置密码解决方法
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/20/%E5%AE%89%E8%A3%85MySQL5-7%E6%B2%A1%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" target="_self">
-          
-          
-            
-          
-          我在WSL的CentOS7系统中安装MySQL5.7后发现全程都没设置密码
-
-为了加强安全性，MySQL5.7为root用户随机生成了一个密码，在error log中，关于error log的位置，如果安装的是RPM包，则默认是/var/log/mysqld.log。只有启动过一次mysql才可以查看临时密码
-
-执行下面的代码查看
-1grep &#x27;temporary password&#x
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-09-20 16:46" pubdate>
-              2021-09-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/MySQL/">MySQL</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">Linux</a>
-            
-              <a href="/tags/MySQL/">MySQL</a>
             
           </div>
         
