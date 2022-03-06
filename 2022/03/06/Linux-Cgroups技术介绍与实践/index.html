@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
@@ -9,35 +9,46 @@
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
   <link rel="icon" href="/blog/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <meta name="theme-color" content="rgba(47,65,84,0.7)">
-  <meta name="description" content="">
+  <meta name="theme-color" content="#2f4154">
   <meta name="author" content="天涯过客">
   <meta name="keywords" content="">
   
+    <meta name="description" content="@[TOC](Linux Cgroups技术介绍与实践) 什么是CgroupsLinux Cgroups (Control Groups ）提供了对 组进程及将来子进程的资源限制、控制和统计的能力，这些资源包括 CPU、内存、存储、网络等通过Cgroups，可以方便地限制某个进程的资源占用，并且可以实时地监控进程的监控和统计信息。 Cgroups中的3个组件 cgroup是对进程分组管理的一种机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux Cgroups技术介绍与实践">
+<meta property="og:url" content="http://zrgo.top/blog/2022/03/06/Linux-Cgroups%E6%8A%80%E6%9C%AF%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="天涯过客的个人博客">
+<meta property="og:description" content="@[TOC](Linux Cgroups技术介绍与实践) 什么是CgroupsLinux Cgroups (Control Groups ）提供了对 组进程及将来子进程的资源限制、控制和统计的能力，这些资源包括 CPU、内存、存储、网络等通过Cgroups，可以方便地限制某个进程的资源占用，并且可以实时地监控进程的监控和统计信息。 Cgroups中的3个组件 cgroup是对进程分组管理的一种机制">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-06T14:34:12.000Z">
+<meta property="article:modified_time" content="2022-03-06T14:34:12.000Z">
+<meta property="article:author" content="天涯过客">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
   <title>Linux Cgroups技术介绍与实践 - 天涯过客的个人博客</title>
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
   
     
     
       
-      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
     
   
 
   
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
   
-
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -46,7 +57,7 @@
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
 <link  rel="stylesheet" href="/blog/css/main.css" />
@@ -56,7 +67,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"zrgo.top","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":true,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"0287da7553a05031a40655277f77c232","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"UryFueQ0QM8u13LtdEcy55Oa-gzGzoHsz","app_key":"lrLoQiKVouxnqfiXe8o8QYvk","server_url":"https://uryfueq0.lc-cn-n1-shared.com"}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"zrgo.top","root":"/blog/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/blog/local-search.xml"};
   </script>
   <script  src="/blog/js/utils.js" ></script>
   <script  src="/blog/js/color-schema.js" ></script>
@@ -67,8 +78,9 @@
   <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand"
-       href="/blog/">&nbsp;<strong>天涯过客</strong>&nbsp;</a>
+    <a class="navbar-brand" href="/blog/">
+      <strong>Fluid</strong>
+    </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -142,13 +154,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
           </li>
         
         
           <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self">&nbsp;<i
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
                 class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
@@ -158,7 +171,7 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/blog/img/6.jpg') no-repeat center center;
+         style="background: url('/blog/img/default.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -169,11 +182,6 @@
 
             
               <div class="mt-3">
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-author" aria-hidden="true"></i>
-      天涯过客
-    </span>
   
   
     <span class="post-meta">
@@ -187,33 +195,22 @@
 
 <div class="mt-1">
   
-    
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.4k 字
+      3.6k 字
     </span>
   
 
   
-    
     <span class="post-meta mr-2">
       <i class="iconfont icon-clock-fill"></i>
       
       
-      17
-       分钟
+      30 分钟
     </span>
   
 
   
-  
-    
-      <!-- 不蒜子统计文章PV -->
-      <span id="busuanzi_container_page_pv" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="busuanzi_value_page_pv"></span> 次
-      </span>
-    
   
 </div>
 
@@ -240,12 +237,6 @@
             <!-- SEO header -->
             <h1 style="display: none">Linux Cgroups技术介绍与实践</h1>
             
-              <p class="note note-info">
-                
-                  本文最后更新于：2022年3月6日 晚上
-                
-              </p>
-            
             <div class="markdown-body">
               <p>@[TOC](Linux Cgroups技术介绍与实践)</p>
 <h2 id="什么是Cgroups"><a href="#什么是Cgroups" class="headerlink" title="什么是Cgroups"></a>什么是Cgroups</h2><p><code>Linux Cgroups (Control Groups ）</code>提供了对 组进程及将来子进程的资源限制、控制和统<br>计的能力，这些资源包括 CPU、内存、存储、网络等通过<code>Cgroups</code>，可以方便地限制某个进<br>程的资源占用，并且可以实时地监控进程的监控和统计信息。</p>
@@ -264,7 +255,7 @@
 <li>一个进程可以作为多个<code>cgroup</code>的成员，但是这些<code>cgroup</code>必须在不同的<code>hierarchy</code></li>
 <li>一个进程<code>fork</code>出子进程时，子进程是和父进程在同一个<code>cgroup</code>中的，也可以根据需要将其移动到其他 <code>cgroup</code></li>
 </ul>
-<h2 id="操作Cgroups"><a href="#操作Cgroups" class="headerlink" title="操作Cgroups"></a>操作Cgroups</h2><h3 id="1-创建并挂在一个hierarchy（cgroup树）"><a href="#1-创建并挂在一个hierarchy（cgroup树）" class="headerlink" title="1.创建并挂在一个hierarchy（cgroup树）"></a>1.创建并挂在一个hierarchy（cgroup树）</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mkdir cgroupTest <span class="hljs-comment">#创建一个hierarchy挂载点</span><br><br>sudo mount -t cgroup -o none,name=cgroupTest cgroupTest ./cgroupTest <span class="hljs-comment">#挂载一个hierarchy</span><br><br>ls cgroupTest <span class="hljs-comment">#挂载后我们就可以看到系统在这个目录下生成了一些默认文件</span><br><br>cgroup.clone_children  cgroup.procs  cgroup.sane_behavior  <br>notify_on_release  release_agent  tasks<br></code></pre></div></td></tr></table></figure>
+<h2 id="操作Cgroups"><a href="#操作Cgroups" class="headerlink" title="操作Cgroups"></a>操作Cgroups</h2><h3 id="1-创建并挂在一个hierarchy（cgroup树）"><a href="#1-创建并挂在一个hierarchy（cgroup树）" class="headerlink" title="1.创建并挂在一个hierarchy（cgroup树）"></a>1.创建并挂在一个hierarchy（cgroup树）</h3><figure class="highlight bash"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><pre><code class="hljs bash">mkdir cgroupTest <span class="hljs-comment">#创建一个hierarchy挂载点</span><br><br>sudo mount -t cgroup -o none,name=cgroupTest cgroupTest ./cgroupTest <span class="hljs-comment">#挂载一个hierarchy</span><br><br>ls cgroupTest <span class="hljs-comment">#挂载后我们就可以看到系统在这个目录下生成了一些默认文件</span><br><br>cgroup.clone_children  cgroup.procs  cgroup.sane_behavior  <br>notify_on_release  release_agent  tasks<br></code></pre></td></tr></table></figure>
 
 <p>这些文件就是这个<code>hierarchy cgroup</code>根节点的配置项，上面这些文件的含义分别如下。</p>
 <ul>
@@ -277,18 +268,20 @@
 <li><p><code>tasks</code>标识<code>cgroup</code>下面的进程<code>ID</code>，如果把一个进程<code>ID</code>写到<code>tasks</code>文件中，便会将相应的进程加入到这个<code>cgroup</code></p>
 </li>
 </ul>
-<h3 id="2-创建hierarchy-cgroup根节点中扩展出的两个子cgroup"><a href="#2-创建hierarchy-cgroup根节点中扩展出的两个子cgroup" class="headerlink" title="2.创建hierarchy cgroup根节点中扩展出的两个子cgroup"></a>2.创建hierarchy cgroup根节点中扩展出的两个子cgroup</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo mkdir cgroup-1 ＃创建子cgroup cgroup-1<br>sudo mkdir cgroup-2 ＃创建子cgroup cgroup-2<br><br>tree<br>.<br>├── cgroup-1<br>│   ├── cgroup.clone_children<br>│   ├── cgroup.procs<br>│   ├── notify_on_release<br>│   └── tasks<br>├── cgroup-2<br>│   ├── cgroup.clone_children<br>│   ├── cgroup.procs<br>│   ├── notify_on_release<br>│   └── tasks<br>├── cgroup.clone_children<br>├── cgroup.procs<br>├── cgroup.sane_behavior<br>├── notify_on_release<br>├── release_agent<br>└── tasks<br></code></pre></div></td></tr></table></figure>
+<h3 id="2-创建hierarchy-cgroup根节点中扩展出的两个子cgroup"><a href="#2-创建hierarchy-cgroup根节点中扩展出的两个子cgroup" class="headerlink" title="2.创建hierarchy cgroup根节点中扩展出的两个子cgroup"></a>2.创建hierarchy cgroup根节点中扩展出的两个子cgroup</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo mkdir cgroup-1 ＃创建子cgroup cgroup-1<br>sudo mkdir cgroup-2 ＃创建子cgroup cgroup-2<br><br>tree<br>.<br>├── cgroup-1<br>│   ├── cgroup.clone_children<br>│   ├── cgroup.procs<br>│   ├── notify_on_release<br>│   └── tasks<br>├── cgroup-2<br>│   ├── cgroup.clone_children<br>│   ├── cgroup.procs<br>│   ├── notify_on_release<br>│   └── tasks<br>├── cgroup.clone_children<br>├── cgroup.procs<br>├── cgroup.sane_behavior<br>├── notify_on_release<br>├── release_agent<br>└── tasks<br></code></pre></td></tr></table></figure>
 
 <p>可以看到，在<code>cgroup</code>的目录下创建文件夹时，<code>Kernel</code>会把文件夹标记为这个<code>cgroup</code>的子<code>cgroup</code>，它们会继承父<code>cgroup</code>的属性。</p>
 <h3 id="3-cgroup中添加和移动进程"><a href="#3-cgroup中添加和移动进程" class="headerlink" title="3.cgroup中添加和移动进程"></a>3.cgroup中添加和移动进程</h3><p>一个进程在<code>Cgroups hierarchy</code>中，只能在一个<code>cgroup</code>节点上存在，系统的所有进程都会默认在根节点上存在，将进程移动到其他<code>cgroup</code>节点，只需要将进程<code>ID</code>到移动到的<code>cgroup</code>节点的<code>tasks</code>文件中即可。</p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> cgroup-1<br><span class="hljs-built_in">echo</span> $$ <span class="hljs-comment">#当前终端的进程id</span><br>27461<br><br>sudo sh -c <span class="hljs-string">&quot;echo $$ &gt;&gt; tasks&quot;</span> <span class="hljs-comment"># 将我所在的终端进程移动到cgroup-1</span><br><br>cat /proc/27461/cgroup<br>15:name=cgroupTest:/cgroup-1<br>14:name=systemd:/<br>13:rdma:/<br>12:pids:/<br>11:hugetlb:/<br>10:net_prio:/<br>9:perf_event:/<br>8:net_cls:/<br>7:freezer:/<br>6:devices:/<br>5:memory:/<br>4:blkio:/<br>3:cpuacct:/<br>2:cpu:/<br>1:cpuset:/<br>0::/<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> cgroup-1<br><span class="hljs-built_in">echo</span> $$ <span class="hljs-comment">#当前终端的进程id</span><br>27461<br><br>sudo sh -c <span class="hljs-string">&quot;echo $$ &gt;&gt; tasks&quot;</span> <span class="hljs-comment"># 将我所在的终端进程移动到cgroup-1</span><br><br>cat /proc/27461/cgroup<br>15:name=cgroupTest:/cgroup-1<br>14:name=systemd:/<br>13:rdma:/<br>12:pids:/<br>11:hugetlb:/<br>10:net_prio:/<br>9:perf_event:/<br>8:net_cls:/<br>7:freezer:/<br>6:devices:/<br>5:memory:/<br>4:blkio:/<br>3:cpuacct:/<br>2:cpu:/<br>1:cpuset:/<br>0::/<br></code></pre></td></tr></table></figure>
 
 <p>可以看到， 前的27461进程己经被加到<code>cgroup-test:/cgroup-1</code>中了。</p>
 <h3 id="4-通过subsystem限制cgroup中进程的资源"><a href="#4-通过subsystem限制cgroup中进程的资源" class="headerlink" title="4.通过subsystem限制cgroup中进程的资源"></a>4.通过subsystem限制cgroup中进程的资源</h3><p>在上面创建<code>hierarchy</code>的时候，这个<code>hierarchy</code>并没有关联到任何的<code>subsystem</code>，所以没办法通过那个<code>hierarchy</code>中的<code>cgroup</code>节点限制进程的资源占用，其实系统默认已经为每个<code>subsystem</code>创建了一个默认的<code>hierarchy</code>，比如<code>memory hierarchyo</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mount | grep memory <span class="hljs-comment">#</span><br>cgroup on /sys/fs/cgroup/memory <span class="hljs-built_in">type</span> cgroup (rw,nosuid,nodev,noexec,relatime,memory)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">mount | grep memory <span class="hljs-comment">#</span><br>cgroup on /sys/fs/cgroup/memory <span class="hljs-built_in">type</span> cgroup (rw,nosuid,nodev,noexec,relatime,memory)<br></code></pre></td></tr></table></figure>
 
 <p>可以看到，<code>/sys/fs/cgrou/memory</code>目录便是挂在了<code>memory subsystem hierarchy</code> 上。下面，就通过在这个 <code>hierarchy</code>中创建<code>cgroup</code>，限制如下进程占用的内存。</p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /sys/fs/cgroup/memory<br><span class="hljs-comment"># 首先，在不做限制的情况下，启动一个占用200MB内存的stress进程</span><br>stress --vm-bytes 200m --vm-keep -m 1<br><br><span class="hljs-comment">#这时打开另一个终端输入top命令</span><br><br>  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND<br>31132 root      20   0  208664 204952    272 R 100.0   2.5   0:12.49 stress<br><br><span class="hljs-comment">#可以看到%MEM占用为2.5%，因为我linux系统内存为8GB</span><br><br><span class="hljs-comment">#接下来切换终端回来</span><br><span class="hljs-comment">#创建一个cgroup</span><br>sudo mkdir test-limit-memory &amp;&amp; <span class="hljs-built_in">cd</span> test-limit-memory <br><span class="hljs-comment">#设置该cgroup的最大内存占用为1OOMB</span><br>sudo sh -c <span class="hljs-string">&quot;echo &quot;</span>lOOm<span class="hljs-string">&quot; &gt; memory.limit_in_bytes&quot;</span> <br><span class="hljs-comment">#将当前进程移动到这个 cgroup</span><br>sudo sh -c <span class="hljs-string">&quot;echo $$ &gt; tasks&quot;</span><br><span class="hljs-comment">#再次运行占用内存 200MB stress 进程</span><br>stress --vm-bytes 200m --vm-keep -m 1<br><span class="hljs-comment">#查看刚刚那个运行了top的终端</span><br>  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND<br>31132 root      20   0  208664  10164    272 R 100.0   1.3   0:12.49 stress<br><br><span class="hljs-comment">#可以看到内存占用变为1.3%,缩小为一半</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /sys/fs/cgroup/memory<br><span class="hljs-comment"># 首先，在不做限制的情况下，启动一个占用200MB内存的stress进程</span><br>stress --vm-bytes 200m --vm-keep -m 1<br><br><span class="hljs-comment">#这时打开另一个终端输入top命令</span><br><br>  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND<br>31132 root      20   0  208664 204952    272 R 100.0   2.5   0:12.49 stress<br><br><span class="hljs-comment">#可以看到%MEM占用为2.5%，因为我linux系统内存为8GB</span><br><br><span class="hljs-comment">#接下来切换终端回来</span><br><span class="hljs-comment">#创建一个cgroup</span><br>sudo mkdir test-limit-memory &amp;&amp; <span class="hljs-built_in">cd</span> test-limit-memory <br><span class="hljs-comment">#设置该cgroup的最大内存占用为1OOMB</span><br>sudo sh -c <span class="hljs-string">&quot;echo &quot;</span>lOOm<span class="hljs-string">&quot; &gt; memory.limit_in_bytes&quot;</span> <br><span class="hljs-comment">#将当前进程移动到这个 cgroup</span><br>sudo sh -c <span class="hljs-string">&quot;echo $$ &gt; tasks&quot;</span><br><span class="hljs-comment">#再次运行占用内存 200MB stress 进程</span><br>stress --vm-bytes 200m --vm-keep -m 1<br><span class="hljs-comment">#查看刚刚那个运行了top的终端</span><br>  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND<br>31132 root      20   0  208664  10164    272 R 100.0   1.3   0:12.49 stress<br><br><span class="hljs-comment">#可以看到内存占用变为1.3%,缩小为一半</span><br></code></pre></td></tr></table></figure>
+
+
 
             </div>
             <hr>
@@ -339,32 +332,6 @@
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments">
-                
-                  
-                
-                
-  <div id="valine"></div>
-  <script type="text/javascript">
-    Fluid.utils.loadComments('#valine', function() {
-      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
-        var options = Object.assign(
-          {"appId":"UryFueQ0QM8u13LtdEcy55Oa-gzGzoHsz","appKey":"lrLoQiKVouxnqfiXe8o8QYvk","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true,"requiredFields":[]},
-          {
-            el: "#valine",
-            path: window.location.pathname
-          }
-        )
-        new Valine(options);
-      });
-    });
-  </script>
-  <noscript>Please enable JavaScript to view the comments</noscript>
-
-
-              </article>
-            
           </article>
         </div>
       </div>
@@ -387,7 +354,7 @@
     
 
     
-      <a id="scroll-top-button" href="#" role="button">
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
     
@@ -424,60 +391,8 @@
      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
   </div>
   
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- LeanCloud 统计PV -->
-        <span id="leancloud-site-pv-container" style="display: none">
-            总访问量 
-            <span id="leancloud-site-pv"></span>
-             次
-          </span>
-      
-      
-        <!-- LeanCloud 统计UV -->
-        <span id="leancloud-site-uv-container" style="display: none">
-            总访客数 
-            <span id="leancloud-site-uv"></span>
-             人
-          </span>
-      
-
-    
-  </div>
-
 
   
-  <!-- 备案信息 -->
-  <div class="beian">
-    <span>
-      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
-        浙ICP备2021030557号
-      </a>
-    </span>
-    
-      
-        <span>
-          <a
-            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
-            rel="nofollow noopener"
-            class="beian-police"
-            target="_blank"
-          >
-            
-              <span style="visibility: hidden; width: 0">|</span>
-              <img src="/blog/img/police_beian.png" alt="police-icon"/>
-            
-            <span>京公网安备12345678号</span>
-          </a>
-        </span>
-      
-    
-  </div>
-
 
   
 </footer>
@@ -485,8 +400,8 @@
 
   <!-- SCRIPTS -->
   
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
 
   <script>
     NProgress.configure({"showSpinner":false,"trickleSpeed":100})
@@ -497,60 +412,53 @@
   </script>
 
 
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
 <script  src="/blog/js/events.js" ></script>
 <script  src="/blog/js/plugins.js" ></script>
 
 <!-- Plugins -->
 
 
-  
-    
-      <script  src="/blog/js/img-lazyload.js" ></script>
-    
-  
-
-
-
-  
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
-
-
-
   <script  src="/blog/js/local-search.js" ></script>
 
 
 
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
 
 
-  <script defer src="/blog/js/leancloud.js" ></script>
+
+  
 
 
 
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
   <script>
     (function (window, document) {
       var typing = Fluid.plugins.typing;
       var title = document.getElementById('subtitle').title;
       
-      typing(title)
+        typing(title);
       
     })(window, document);
   </script>
@@ -564,30 +472,6 @@
 
 
 
-
-
-  
-    <!-- Baidu Analytics -->
-    <script defer>
-      var _hmt = _hmt || [];
-      (function () {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?0287da7553a05031a40655277f77c232";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-      })();
-    </script>
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 
 
