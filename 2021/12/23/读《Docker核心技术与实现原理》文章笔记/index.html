@@ -18,7 +18,7 @@
   <meta name="author" content="天涯过客">
   <meta name="keywords" content="">
   
-  <title>CentOS7安装图形化界面xfce4 - 天涯过客的个人博客</title>
+  <title>读《Docker核心技术与实现原理》文章笔记 - 天涯过客的个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="CentOS7安装图形化界面xfce4">
+            <span class="h2" id="subtitle" title="读《Docker核心技术与实现原理》文章笔记">
               
             </span>
 
@@ -178,8 +178,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-09-30 01:42" pubdate>
-        2021年9月30日 凌晨
+      <time datetime="2021-12-23 23:07" pubdate>
+        2021年12月23日 晚上
       </time>
     </span>
   
@@ -190,7 +190,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      250 字
+      1.5k 字
     </span>
   
 
@@ -200,7 +200,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3
+      15
        分钟
     </span>
   
@@ -238,28 +238,63 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">CentOS7安装图形化界面xfce4</h1>
+            <h1 style="display: none">读《Docker核心技术与实现原理》文章笔记</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年9月30日 凌晨
+                  本文最后更新于：2021年12月23日 晚上
                 
               </p>
             
             <div class="markdown-body">
-              <p>WSL2中的CentOS7没有图形化界面，很多人用不习惯，于是我们可以为CentOS7安装图形化界面。<br><strong>如果想在WSL2中装CentOS系统可看我的这篇文章<a target="_blank" rel="noopener" href="http://118.178.237.76/2021/09/20/WSL%E5%AE%89%E8%A3%85CentOS7/">WSL安装CentOS7</a></strong></p>
-<h3 id="更新yum源"><a href="#更新yum源" class="headerlink" title="更新yum源"></a>更新yum源</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">yum update<br>yum install epel-release <br></code></pre></div></td></tr></table></figure>
-<h3 id="安装X-WINDOWS"><a href="#安装X-WINDOWS" class="headerlink" title="安装X WINDOWS"></a>安装X WINDOWS</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">yum groupinstall <span class="hljs-string">&quot;X Window System&quot;</span> <br></code></pre></div></td></tr></table></figure>
-<p> 当出现 Complete！说明这里安装成功了。</p>
-<h3 id="安装xfce"><a href="#安装xfce" class="headerlink" title="安装xfce"></a>安装xfce</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">yum groupinstall xfce <br></code></pre></div></td></tr></table></figure>
-
-<p>执行<code>sudo systemctl isolate graphical.target</code>进入系统，但是不知道为什么，我这里无效</p>
-<h3 id="打开XLaunch"><a href="#打开XLaunch" class="headerlink" title="打开XLaunch"></a>打开XLaunch</h3><p><img src="https://img-blog.csdnimg.cn/10ae47f7a5224c918054e71a0894fabc.png" srcset="/blog/img/loading.gif" lazyload alt="XLaunch"><br>注意第三步，这里要打勾</p>
-<p><img src="https://img-blog.csdnimg.cn/c8e06659c995481eada8e17820612a7d.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p6r6Iqx5rW3,size_20,color_FFFFFF,t_70,g_se,x_16" srcset="/blog/img/loading.gif" lazyload><br>启动后啥也没有是正常的</p>
-<h3 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h3><p><code>xprofile</code>和<code>profile</code>文件中写入配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">vi /etc/profile  <span class="hljs-comment">##编辑/etc/profile文件</span><br><span class="hljs-comment">##添加如下内容</span><br><span class="hljs-built_in">alias</span> xfce4=<span class="hljs-string">&quot;. /etc/xprofile &amp;&amp; startxfce4&quot;</span><br><span class="hljs-built_in">export</span> DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk <span class="hljs-string">&#x27;&#123;print $2; exit;&#125;&#x27;</span>):0.0<br><span class="hljs-comment">#######################分割线##########################</span><br><br>vi /etc/xprofile  <span class="hljs-comment">##编辑/etc/xprofile文件</span><br><span class="hljs-comment">##添加如下内容</span><br><span class="hljs-built_in">export</span> LANG=zh_CN.UTF-8<br><span class="hljs-built_in">export</span> LANGUAGE=zh_CN:en_US<br><span class="hljs-built_in">export</span> LC_CTYPE=en_US.UTF-8<br><span class="hljs-built_in">export</span> GTK_IM_MODULE=fcitx<br><span class="hljs-built_in">export</span> QT_IM_MODULE=fcitx<br><span class="hljs-built_in">export</span> XMODIFIERS=<span class="hljs-string">&quot;@im=fcitx&quot;</span><br></code></pre></div></td></tr></table></figure>
-
-<p>此时重启系统，然后在终端输入<code>xfce4</code>就可启动桌面了</p>
+              <p><code>Docker</code>采用<code>C/S</code>架构，包括客户端和服务端，<code>Dokcer</code>守护进程<code>Daemon</code>作为服务端接受来自客户端的请求，并处理这些请求（创建、运行、分发容器）</p>
+<p>客户端和服务端可以运行在一个主机上，也能通过<code>socket</code>和<code>RESTful API</code>进行通信</p>
+<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><h3 id="命名空间（Namespace）"><a href="#命名空间（Namespace）" class="headerlink" title="命名空间（Namespace）"></a>命名空间（Namespace）</h3><p><code>Linux</code>通过<code>Namespace</code>来实现进程的隔离，<code>Docker</code>容器内部的任意进程对宿主机中的进程一无所知，运行在其中的应用就像独立的操作系统中运行一样。</p>
+<ul>
+<li><strong>pid 命名空间</strong><br>不同用户的进程就是通过pid命名空间隔离开的，且不同命名空间中可以拥有相同的<code>pid</code>。每个容器进程在<code>Docker中</code>的父进程就是<code>Dokcer</code>进程，每个容器进程拥有不同的<code>pid</code>命名空间，且允许嵌套</li>
+</ul>
+<hr>
+<ul>
+<li><strong>net 命名空间</strong><br>每个容器通过net命名空间来实现网络隔离，每个net命名空间拥有独立的网络设备，ip，路由表，/proc/net目录。Docker采用默认的veth方式，将容器中的虚拟网卡同主机host的一个网桥Docker0连接在一起</li>
+</ul>
+<hr>
+<ul>
+<li><strong>ipc 命名空间</strong><br>容器中进程的交互还是采用了<code>Linux常</code>用的进程间交互方式<code>(interprocess communication - IPC)</code>，包括信号量，消息队列，共享内存。容器的进程间交互实际上还是 host 上具有相同<code>pid</code>命名空间中的进程间交互，因此需要在<code>IPC</code>资源申请时加入命名空间信息，每个<code>IPC</code>资源有一个唯一的 32 位 id。</li>
+</ul>
+<hr>
+<ul>
+<li><strong>mnt 命名空间</strong><br>类似<code>chroot</code>，将一个进程放到一个特定的目录执行。mnt 命名空间允许不同命名空间的进程看到的文件结构不同，这样每个命名空间 中的进程所看到的文件目录就被隔离开了。同 <code>chroot </code>不同，每个命名空间中的容器在<code> /proc/mounts</code> 的信息只包含所在命名空间的<code>mount point</code>。</li>
+</ul>
+<hr>
+<ul>
+<li><strong>uts 命名空间</strong><br><code>UTS(&quot;UNIX Time-sharing System&quot;) </code>命名空间允许每个容器拥有独立的 <code>hostname </code>和<code> domain name</code>， 使其在网络上可以被视作一个独立的节点而非 主机上的一个进程。</li>
+</ul>
+<hr>
+<ul>
+<li><strong>user 命名空间</strong><br>每个容器可以拥有不同的用户和组id，也就是说可以在容器内用容器内部的用户执行程序，而非主机上的用户</li>
+</ul>
+<p><strong>因此Docker利用命名空间实现了进程和网络的隔离</strong></p>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><p>虽然容器通过命名空间实现了网络的隔离，但是却没有办法通过宿主机的网络与互联网连通，会造成很多不便和限制。<code>Docker</code>为我们提供了四种网络配置模式<code>Host、Container、None</code> 和<code>Bridge</code>模式。<br>默认的是网桥<code>（Bridge）</code>模式</p>
+<ul>
+<li><strong>Bridge</strong></li>
+</ul>
+<ol>
+<li>当<code>Docker</code>服务在主机启动后会创建一个虚拟网桥<code>docker0</code>，随后在主机上启动的所有服务默认都会与该网桥相连。</li>
+<li><code>Docker</code>创建一个新容器的时候会创建一对虚拟网卡，一个放到容器中，并改名为eth0，该eth0只在容器的命名空间内可见；</li>
+<li>另一个桥接到<code>docker0</code>网桥上，并具有唯一的名字，如<code>veth7689</code></li>
+<li>从网桥的可用地址中分一个ip地址给容器的<code>eth0</code>，并配置默认路由到网桥<code>docker0</code>的<code>veth7689</code></li>
+</ol>
+<p>可以在<code>docker run</code>的时候通过<code>- -net=</code>参数来指定容器的网络配置，有四个选项：</p>
+<ul>
+<li><strong>–net=bridge</strong><br>这个是默认值，连接到默认的网桥。</li>
+<li><strong>–net=host</strong><br>告诉 <code>Docker </code>不要将容器网络放到隔离的命名空间中，让容器使用本地主机的网络，它拥有完全的本地主机接口访问权限。容器进程可以跟主机其它<code>root</code>进程一样可以打开低范围的端口，可以访问本地网络服务比如 <code>D-bus</code>，还可以让容器做一些影响整个主机系统的事情，比如重启主机。因此使用这个选项的时候要非常小心。如果进一步的使用 <code>--privileged=true</code>，容器会被允许直接配置主机的网络堆栈。</li>
+<li><strong>–net=container:NAME_or_ID</strong><br>让 <code>Docker</code> 将新建容器的进程放到一个已存在容器的网络栈中，新容器进程有自己的文件系统、进程列表和资源限制，但会和已存在的容器共享 <code>IP </code>地址和端口等网络资源，两者进程可以直接通过 lo 环回接口通信。</li>
+<li><strong>–net=none</strong><br>让 <code>Docker</code> 将新容器放到隔离的网络栈中，但是不进行网络配置。之后，用户可以自己进行配置。</li>
+</ul>
+<h1 id="CGroups"><a href="#CGroups" class="headerlink" title="CGroups"></a>CGroups</h1><p>倘若其中的某一个容器正在执行 <code>CPU </code>密集型的任务，那么就会影响其他容器中任务的性能与执行效率，导致多个容器相互影响并且抢占资源，因此<code>Docker</code>通过<code>CGroups</code>技术隔离主机上的物理资源，如CPU、内存、磁盘<code> I/O</code> 和网络带宽等。</p>
+<p>每一个<code> CGroup</code> 都是一组被相同的标准和参数限制的进程，不同的 <code>CGroup</code> 之间是有层级关系的，可以继承。在<code> CGroup</code> 这种机制中，所有的资源控制都是以<code>CGroup</code>作为单位实现的，每一个进程都可以随时加入和退出一个 <code>CGroup</code>。</p>
+<h1 id="UnionFS"><a href="#UnionFS" class="headerlink" title="UnionFS"></a>UnionFS</h1><p>联合文件系统<code>UnionFS</code>是一种分层、轻量级并且高性能的文件系统，它支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下.</p>
+<p>目前版本的的<code>Docker</code>默认使用<code>overlay2</code>存储驱动，之前是<code>aufs</code></p>
 
             </div>
             <hr>
@@ -269,9 +304,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/blog/categories/Linux/">Linux</a>
-                    
-                      <a class="hover-with-bg" href="/blog/categories/Linux/CentOS7/">CentOS7</a>
+                      <a class="hover-with-bg" href="/blog/categories/Docker/">Docker</a>
                     
                   </div>
                 
@@ -279,7 +312,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/blog/tags/Linux/">Linux</a>
+                      <a class="hover-with-bg" href="/blog/tags/Docker/">Docker</a>
                     
                   </div>
                 
@@ -296,9 +329,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2021/11/29/Go%E7%9A%84%E8%BD%BB%E9%87%8F%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E5%BA%93-Casbin%E7%9A%84%E4%BD%BF%E7%94%A8/">
+                      <a href="/blog/2022/03/06/Linux-Cgroups%E6%8A%80%E6%9C%AF%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E8%B7%B5/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Go的轻量权限控制库-Casbin的使用</span>
+                        <span class="hidden-mobile">Linux Cgroups技术介绍与实践</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -306,8 +339,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2021/09/26/10%E5%88%86%E9%92%9F%E7%9C%8B%E6%87%82Docker%E5%92%8CK8S/">
-                        <span class="hidden-mobile">10分钟看懂Docker和K8S</span>
+                      <a href="/blog/2021/12/22/Go%E8%AF%AD%E8%A8%80%E4%BD%BF%E7%94%A8golang-jwt-jwt-v4%E8%BF%9B%E8%A1%8CJWT%E9%89%B4%E6%9D%83/">
+                        <span class="hidden-mobile">Go语言使用golang-jwt/jwt/v4进行JWT鉴权</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

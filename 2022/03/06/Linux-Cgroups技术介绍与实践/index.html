@@ -18,7 +18,7 @@
   <meta name="author" content="天涯过客">
   <meta name="keywords" content="">
   
-  <title>CentOS7安装图形化界面xfce4 - 天涯过客的个人博客</title>
+  <title>Linux Cgroups技术介绍与实践 - 天涯过客的个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="CentOS7安装图形化界面xfce4">
+            <span class="h2" id="subtitle" title="Linux Cgroups技术介绍与实践">
               
             </span>
 
@@ -178,8 +178,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-09-30 01:42" pubdate>
-        2021年9月30日 凌晨
+      <time datetime="2022-03-06 22:34" pubdate>
+        2022年3月6日 晚上
       </time>
     </span>
   
@@ -190,7 +190,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      250 字
+      1.4k 字
     </span>
   
 
@@ -200,7 +200,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3
+      17
        分钟
     </span>
   
@@ -238,28 +238,57 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">CentOS7安装图形化界面xfce4</h1>
+            <h1 style="display: none">Linux Cgroups技术介绍与实践</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年9月30日 凌晨
+                  本文最后更新于：2022年3月6日 晚上
                 
               </p>
             
             <div class="markdown-body">
-              <p>WSL2中的CentOS7没有图形化界面，很多人用不习惯，于是我们可以为CentOS7安装图形化界面。<br><strong>如果想在WSL2中装CentOS系统可看我的这篇文章<a target="_blank" rel="noopener" href="http://118.178.237.76/2021/09/20/WSL%E5%AE%89%E8%A3%85CentOS7/">WSL安装CentOS7</a></strong></p>
-<h3 id="更新yum源"><a href="#更新yum源" class="headerlink" title="更新yum源"></a>更新yum源</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">yum update<br>yum install epel-release <br></code></pre></div></td></tr></table></figure>
-<h3 id="安装X-WINDOWS"><a href="#安装X-WINDOWS" class="headerlink" title="安装X WINDOWS"></a>安装X WINDOWS</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">yum groupinstall <span class="hljs-string">&quot;X Window System&quot;</span> <br></code></pre></div></td></tr></table></figure>
-<p> 当出现 Complete！说明这里安装成功了。</p>
-<h3 id="安装xfce"><a href="#安装xfce" class="headerlink" title="安装xfce"></a>安装xfce</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">yum groupinstall xfce <br></code></pre></div></td></tr></table></figure>
+              <p>@[TOC](Linux Cgroups技术介绍与实践)</p>
+<h2 id="什么是Cgroups"><a href="#什么是Cgroups" class="headerlink" title="什么是Cgroups"></a>什么是Cgroups</h2><p><code>Linux Cgroups (Control Groups ）</code>提供了对 组进程及将来子进程的资源限制、控制和统<br>计的能力，这些资源包括 CPU、内存、存储、网络等通过<code>Cgroups</code>，可以方便地限制某个进<br>程的资源占用，并且可以实时地监控进程的监控和统计信息。</p>
+<h3 id="Cgroups中的3个组件"><a href="#Cgroups中的3个组件" class="headerlink" title="Cgroups中的3个组件"></a>Cgroups中的3个组件</h3><ul>
+<li><p><code>cgroup</code>是对进程分组管理的一种机制，<code>cgroup</code>包含一组进程，并可以在这个<code>cgroup</code>上增加<code>Linux subsystem</code>的各种参数配置，将一组进程和<code>subsystem</code>的系统参数关联起来。</p>
+</li>
+<li><p><code>subsystem</code>是一组资源控制的模块，每个<code>subsystem</code>会关联到定义了相应限制的<code>cgroup</code>上，并对这个<code>cgroup</code>中的进程做相应的限制和控制,如限制这个cgroup中的进程的内存数，cpu核心数等</p>
+</li>
+<li><p><code>hierarchy</code>的功能是把<code>cgroup</code>串成一个树状的结构,**一个这样的树便是<code>hierarchy</code>**，通过这种树状结构,<code>Cgroups</code>可以做到继承。比如，系统对一组定时的任务进程通过<code>cgroup</code>限制了<code>CPU</code>的使用率，然后其中有一个定时<code>dump</code>日志的进程还需要限制<code>磁盘IO</code>，为了避免限制了磁盘<code>IO</code>之后影响到其他进程，就可以创建<code>cgroup2</code>，使其继承于<code>cgroup</code>并限制磁盘的<code>IO</code>，这样<code>cgroup2</code>便继承了<code>cgroup1</code>中对<code>CPU</code>使用率的限制，并且增加了<code>磁盘IO</code>的限制而不影响到<code>cgroup1</code>中的其他进程。</p>
+</li>
+</ul>
+<h3 id="三个组件的关系"><a href="#三个组件的关系" class="headerlink" title="三个组件的关系"></a>三个组件的关系</h3><ul>
+<li>系统在创建了新的<code>hierarchy</code>之后，系统中所有的进程都会加入这个 <code>hierarchy cgroup</code>根节点，这个<code>cgroup</code>根节点是<code>hierarchy</code>默认创建的，</li>
+<li>一个<code>subsystem</code>只能附加到一个<code>hierarchy</code>上面</li>
+<li>一个<code>hierarchy</code>可以附加多个<code>subsystem</code></li>
+<li>一个进程可以作为多个<code>cgroup</code>的成员，但是这些<code>cgroup</code>必须在不同的<code>hierarchy</code></li>
+<li>一个进程<code>fork</code>出子进程时，子进程是和父进程在同一个<code>cgroup</code>中的，也可以根据需要将其移动到其他 <code>cgroup</code></li>
+</ul>
+<h2 id="操作Cgroups"><a href="#操作Cgroups" class="headerlink" title="操作Cgroups"></a>操作Cgroups</h2><h3 id="1-创建并挂在一个hierarchy（cgroup树）"><a href="#1-创建并挂在一个hierarchy（cgroup树）" class="headerlink" title="1.创建并挂在一个hierarchy（cgroup树）"></a>1.创建并挂在一个hierarchy（cgroup树）</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mkdir cgroupTest <span class="hljs-comment">#创建一个hierarchy挂载点</span><br><br>sudo mount -t cgroup -o none,name=cgroupTest cgroupTest ./cgroupTest <span class="hljs-comment">#挂载一个hierarchy</span><br><br>ls cgroupTest <span class="hljs-comment">#挂载后我们就可以看到系统在这个目录下生成了一些默认文件</span><br><br>cgroup.clone_children  cgroup.procs  cgroup.sane_behavior  <br>notify_on_release  release_agent  tasks<br></code></pre></div></td></tr></table></figure>
 
-<p>执行<code>sudo systemctl isolate graphical.target</code>进入系统，但是不知道为什么，我这里无效</p>
-<h3 id="打开XLaunch"><a href="#打开XLaunch" class="headerlink" title="打开XLaunch"></a>打开XLaunch</h3><p><img src="https://img-blog.csdnimg.cn/10ae47f7a5224c918054e71a0894fabc.png" srcset="/blog/img/loading.gif" lazyload alt="XLaunch"><br>注意第三步，这里要打勾</p>
-<p><img src="https://img-blog.csdnimg.cn/c8e06659c995481eada8e17820612a7d.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p6r6Iqx5rW3,size_20,color_FFFFFF,t_70,g_se,x_16" srcset="/blog/img/loading.gif" lazyload><br>启动后啥也没有是正常的</p>
-<h3 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h3><p><code>xprofile</code>和<code>profile</code>文件中写入配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">vi /etc/profile  <span class="hljs-comment">##编辑/etc/profile文件</span><br><span class="hljs-comment">##添加如下内容</span><br><span class="hljs-built_in">alias</span> xfce4=<span class="hljs-string">&quot;. /etc/xprofile &amp;&amp; startxfce4&quot;</span><br><span class="hljs-built_in">export</span> DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk <span class="hljs-string">&#x27;&#123;print $2; exit;&#125;&#x27;</span>):0.0<br><span class="hljs-comment">#######################分割线##########################</span><br><br>vi /etc/xprofile  <span class="hljs-comment">##编辑/etc/xprofile文件</span><br><span class="hljs-comment">##添加如下内容</span><br><span class="hljs-built_in">export</span> LANG=zh_CN.UTF-8<br><span class="hljs-built_in">export</span> LANGUAGE=zh_CN:en_US<br><span class="hljs-built_in">export</span> LC_CTYPE=en_US.UTF-8<br><span class="hljs-built_in">export</span> GTK_IM_MODULE=fcitx<br><span class="hljs-built_in">export</span> QT_IM_MODULE=fcitx<br><span class="hljs-built_in">export</span> XMODIFIERS=<span class="hljs-string">&quot;@im=fcitx&quot;</span><br></code></pre></div></td></tr></table></figure>
+<p>这些文件就是这个<code>hierarchy cgroup</code>根节点的配置项，上面这些文件的含义分别如下。</p>
+<ul>
+<li><p><code>cgroup.clone_children</code>:<code>cpuset</code>的<code>subsystem</code>会读取这个配置文件，如果这个值是1（默认是0），子<code>cgroup</code>才会继承父<code>cgroup</code>的<code>cpuset</code>配置</p>
+</li>
+<li><p><code>cgroup.procs:</code>是树中当前节点<code>cgroup</code>中的进程组<code>ID</code>，现在的位置是在根节点，这个文件中会有现在系统中所有进程组的<code>ID</code></p>
+</li>
+<li><p><code>notify_on _release和release agent</code>会一起使用。<code>notify on release</code>标识当这个<code>cgroup</code>最后一个进程退出的时候是否执行了<code>release_agent</code>;<code>release_ agent</code>则是一个路径，通常用作进程退出之后自动清理掉不再使用的 <code>cgroup</code></p>
+</li>
+<li><p><code>tasks</code>标识<code>cgroup</code>下面的进程<code>ID</code>，如果把一个进程<code>ID</code>写到<code>tasks</code>文件中，便会将相应的进程加入到这个<code>cgroup</code></p>
+</li>
+</ul>
+<h3 id="2-创建hierarchy-cgroup根节点中扩展出的两个子cgroup"><a href="#2-创建hierarchy-cgroup根节点中扩展出的两个子cgroup" class="headerlink" title="2.创建hierarchy cgroup根节点中扩展出的两个子cgroup"></a>2.创建hierarchy cgroup根节点中扩展出的两个子cgroup</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo mkdir cgroup-1 ＃创建子cgroup cgroup-1<br>sudo mkdir cgroup-2 ＃创建子cgroup cgroup-2<br><br>tree<br>.<br>├── cgroup-1<br>│   ├── cgroup.clone_children<br>│   ├── cgroup.procs<br>│   ├── notify_on_release<br>│   └── tasks<br>├── cgroup-2<br>│   ├── cgroup.clone_children<br>│   ├── cgroup.procs<br>│   ├── notify_on_release<br>│   └── tasks<br>├── cgroup.clone_children<br>├── cgroup.procs<br>├── cgroup.sane_behavior<br>├── notify_on_release<br>├── release_agent<br>└── tasks<br></code></pre></div></td></tr></table></figure>
 
-<p>此时重启系统，然后在终端输入<code>xfce4</code>就可启动桌面了</p>
+<p>可以看到，在<code>cgroup</code>的目录下创建文件夹时，<code>Kernel</code>会把文件夹标记为这个<code>cgroup</code>的子<code>cgroup</code>，它们会继承父<code>cgroup</code>的属性。</p>
+<h3 id="3-cgroup中添加和移动进程"><a href="#3-cgroup中添加和移动进程" class="headerlink" title="3.cgroup中添加和移动进程"></a>3.cgroup中添加和移动进程</h3><p>一个进程在<code>Cgroups hierarchy</code>中，只能在一个<code>cgroup</code>节点上存在，系统的所有进程都会默认在根节点上存在，将进程移动到其他<code>cgroup</code>节点，只需要将进程<code>ID</code>到移动到的<code>cgroup</code>节点的<code>tasks</code>文件中即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> cgroup-1<br><span class="hljs-built_in">echo</span> $$ <span class="hljs-comment">#当前终端的进程id</span><br>27461<br><br>sudo sh -c <span class="hljs-string">&quot;echo $$ &gt;&gt; tasks&quot;</span> <span class="hljs-comment"># 将我所在的终端进程移动到cgroup-1</span><br><br>cat /proc/27461/cgroup<br>15:name=cgroupTest:/cgroup-1<br>14:name=systemd:/<br>13:rdma:/<br>12:pids:/<br>11:hugetlb:/<br>10:net_prio:/<br>9:perf_event:/<br>8:net_cls:/<br>7:freezer:/<br>6:devices:/<br>5:memory:/<br>4:blkio:/<br>3:cpuacct:/<br>2:cpu:/<br>1:cpuset:/<br>0::/<br></code></pre></div></td></tr></table></figure>
+
+<p>可以看到， 前的27461进程己经被加到<code>cgroup-test:/cgroup-1</code>中了。</p>
+<h3 id="4-通过subsystem限制cgroup中进程的资源"><a href="#4-通过subsystem限制cgroup中进程的资源" class="headerlink" title="4.通过subsystem限制cgroup中进程的资源"></a>4.通过subsystem限制cgroup中进程的资源</h3><p>在上面创建<code>hierarchy</code>的时候，这个<code>hierarchy</code>并没有关联到任何的<code>subsystem</code>，所以没办法通过那个<code>hierarchy</code>中的<code>cgroup</code>节点限制进程的资源占用，其实系统默认已经为每个<code>subsystem</code>创建了一个默认的<code>hierarchy</code>，比如<code>memory hierarchyo</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mount | grep memory <span class="hljs-comment">#</span><br>cgroup on /sys/fs/cgroup/memory <span class="hljs-built_in">type</span> cgroup (rw,nosuid,nodev,noexec,relatime,memory)<br></code></pre></div></td></tr></table></figure>
+
+<p>可以看到，<code>/sys/fs/cgrou/memory</code>目录便是挂在了<code>memory subsystem hierarchy</code> 上。下面，就通过在这个 <code>hierarchy</code>中创建<code>cgroup</code>，限制如下进程占用的内存。</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /sys/fs/cgroup/memory<br><span class="hljs-comment"># 首先，在不做限制的情况下，启动一个占用200MB内存的stress进程</span><br>stress --vm-bytes 200m --vm-keep -m 1<br><br><span class="hljs-comment">#这时打开另一个终端输入top命令</span><br><br>  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND<br>31132 root      20   0  208664 204952    272 R 100.0   2.5   0:12.49 stress<br><br><span class="hljs-comment">#可以看到%MEM占用为2.5%，因为我linux系统内存为8GB</span><br><br><span class="hljs-comment">#接下来切换终端回来</span><br><span class="hljs-comment">#创建一个cgroup</span><br>sudo mkdir test-limit-memory &amp;&amp; <span class="hljs-built_in">cd</span> test-limit-memory <br><span class="hljs-comment">#设置该cgroup的最大内存占用为1OOMB</span><br>sudo sh -c <span class="hljs-string">&quot;echo &quot;</span>lOOm<span class="hljs-string">&quot; &gt; memory.limit_in_bytes&quot;</span> <br><span class="hljs-comment">#将当前进程移动到这个 cgroup</span><br>sudo sh -c <span class="hljs-string">&quot;echo $$ &gt; tasks&quot;</span><br><span class="hljs-comment">#再次运行占用内存 200MB stress 进程</span><br>stress --vm-bytes 200m --vm-keep -m 1<br><span class="hljs-comment">#查看刚刚那个运行了top的终端</span><br>  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND<br>31132 root      20   0  208664  10164    272 R 100.0   1.3   0:12.49 stress<br><br><span class="hljs-comment">#可以看到内存占用变为1.3%,缩小为一半</span><br></code></pre></div></td></tr></table></figure>
 
             </div>
             <hr>
@@ -270,8 +299,6 @@
                     <i class="iconfont icon-category"></i>
                     
                       <a class="hover-with-bg" href="/blog/categories/Linux/">Linux</a>
-                    
-                      <a class="hover-with-bg" href="/blog/categories/Linux/CentOS7/">CentOS7</a>
                     
                   </div>
                 
@@ -296,18 +323,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2021/11/29/Go%E7%9A%84%E8%BD%BB%E9%87%8F%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E5%BA%93-Casbin%E7%9A%84%E4%BD%BF%E7%94%A8/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Go的轻量权限控制库-Casbin的使用</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2021/09/26/10%E5%88%86%E9%92%9F%E7%9C%8B%E6%87%82Docker%E5%92%8CK8S/">
-                        <span class="hidden-mobile">10分钟看懂Docker和K8S</span>
+                      <a href="/blog/2021/12/23/%E8%AF%BB%E3%80%8ADocker%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E3%80%8B%E6%96%87%E7%AB%A0%E7%AC%94%E8%AE%B0/">
+                        <span class="hidden-mobile">读《Docker核心技术与实现原理》文章笔记</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
