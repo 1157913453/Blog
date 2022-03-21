@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/fluid.png">
-  <link rel="icon" href="/blog/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -34,22 +34,28 @@
   
   <title>通过casbin实现RBAC权限设计(Mysql存储Policy) - 天涯过客的个人博客</title>
 
-  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
 
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
-  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
 
-  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
-
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
-<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
 
 
 
@@ -58,37 +64,24 @@
 
 <link  rel="stylesheet" href="/blog/css/main.css" />
 
-
-  <link id="highlight-css" rel="stylesheet" href="/blog/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/blog/css/highlight-dark.css" />
-  
-
-
+<!-- 自定义样式保持在最底部 -->
 
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"zrgo.top","root":"/blog/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/blog/local-search.xml"};
+    var CONFIG = {"hostname":"zrgo.top","root":"/blog/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/blog/local-search.xml"};
   </script>
   <script  src="/blog/js/utils.js" ></script>
   <script  src="/blog/js/color-schema.js" ></script>
-
-  
 <meta name="generator" content="Hexo 5.4.0"></head>
 
 
 <body>
-  
-
-  <header>
-    
-
-<div class="header-inner" style="height: 70vh;">
-  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/blog/">
-      <strong>Fluid</strong>
+      <strong>天涯过客</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -167,7 +160,6 @@
               &nbsp;<i class="iconfont icon-search"></i>&nbsp;
             </a>
           </li>
-          
         
         
           <li class="nav-item" id="color-toggle-btn">
@@ -180,69 +172,57 @@
   </div>
 </nav>
 
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/2.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="通过casbin实现RBAC权限设计(Mysql存储Policy)">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-01 19:34" pubdate>
+        2021年12月1日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      undefined 字
+    </span>
   
 
-<div id="banner" class="banner" parallax=true
-     style="background: url('/blog/img/default.png') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
-          
-            <span id="subtitle" data-typed-text="通过casbin实现RBAC权限设计(Mysql存储Policy)"></span>
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      NaN 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
           
         </div>
-
-        
-          
-  <div class="mt-3">
-    
-    
-      <span class="post-meta">
-        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2021-12-01 19:34" pubdate>
-          2021年12月1日 晚上
-        </time>
-      </span>
-    
-  </div>
-
-  <div class="mt-1">
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-chart"></i>
-        
-          6.1k 字
-        
-      </span>
-    
-
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-clock-fill"></i>
-        
-        
-        
-          51 分钟
-        
-      </span>
-    
-
-    
-    
-  </div>
-
-
-        
       </div>
-
-      
     </div>
-  </div>
-</div>
-
-</div>
-
   </header>
 
   <main>
@@ -251,141 +231,83 @@
 
 <div class="container-fluid nopadding-x">
   <div class="row nomargin-x">
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-
-    </div>
-
+    <div class="d-none d-lg-block col-lg-2"></div>
     <div class="col-lg-8 nopadding-x-md">
       <div class="container nopadding-x-md" id="board-ctn">
-        <div id="board">
+        <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">通过casbin实现RBAC权限设计(Mysql存储Policy)</h1>
             
             <div class="markdown-body">
-              
               <p><a target="_blank" rel="noopener" href="https://casbin.org/docs/zh-CN/get-started">casbin官网</a><br>简单记录下casbin的练手</p>
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>截至<code>2021.11.29</code>日，<code>casbin</code>的最新版本为<code>v2</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">go get github.com/casbin/casbin/v2<br></code></pre></td></tr></table></figure>
-<h3 id="编写模型文件model-conf"><a href="#编写模型文件model-conf" class="headerlink" title="编写模型文件model.conf"></a>编写模型文件<code>model.conf</code></h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go">[role_definition]<br>g = _, _, _<br><br>[request_definition]<br>r = sub, dom, obj, act       <span class="hljs-comment">//sub-用户，dom-域，obj-资源，act-操作</span><br><br>[policy_definition]<br>p = sub, dom, obj, act<br><br>[matchers]<br>m = g(r.sub, p.sub, r.dom) &amp;&amp; r.act == p.act &amp;&amp; r.dom == p.dom &amp;&amp; keyMatch(r.obj, p.obj)<br><br>[policy_effect]<br>e = some(where (p.eft == allow))     <span class="hljs-comment">// 任意一条 policy rule 满足, 则最终结果为 allow</span><br></code></pre></td></tr></table></figure>
-<h3 id="持久化存储权限到mysql并初始化"><a href="#持久化存储权限到mysql并初始化" class="headerlink" title="持久化存储权限到mysql并初始化"></a>持久化存储权限到mysql并初始化</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Casbin</span><span class="hljs-params">()</span> *<span class="hljs-title">casbin</span>.<span class="hljs-title">Enforcer</span></span>&#123;<br>	a, _ := gormadapter.NewAdapter(<span class="hljs-string">&quot;mysql&quot;</span>, <span class="hljs-string">&quot;user_name:user_passwd@tcp(127.0.0.1:3306)/&quot;</span>) <span class="hljs-comment">// Your driver and data source.</span><br>	e, err := casbin.NewEnforcer(<span class="hljs-string">&quot;./model.conf&quot;</span>, a)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatal(<span class="hljs-string">&quot;载入casbin配置出错&quot;</span>)<br>	&#125;<br><br>	e.LoadPolicy() <span class="hljs-comment">// 从数据库载入配置</span><br>	<span class="hljs-keyword">return</span> e<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">InitCasbin</span><span class="hljs-params">()</span><span class="hljs-params">(e *casbin.Enforcer ,err error)</span></span> &#123;<br>	e = Casbin()<br>	gh_dev, gh, data1, read, write, hh_dev, hh_admin, root, gh_admin,hh,data2,zr,gp,lc,mdw,pzc := <span class="hljs-string">&quot;gh_dev&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>,<span class="hljs-string">&quot;data1&quot;</span>,<span class="hljs-string">&quot;read&quot;</span>,<span class="hljs-string">&quot;write&quot;</span>,<span class="hljs-string">&quot;hh_dev&quot;</span>,<span class="hljs-string">&quot;hh_admin&quot;</span>,<span class="hljs-string">&quot;root&quot;</span>,<span class="hljs-string">&quot;gh_admin&quot;</span>,<span class="hljs-string">&quot;hh&quot;</span>,<span class="hljs-string">&quot;data2&quot;</span>,<span class="hljs-string">&quot;zr&quot;</span>,<span class="hljs-string">&quot;gp&quot;</span>,<span class="hljs-string">&quot;lc&quot;</span>,<span class="hljs-string">&quot;mdw&quot;</span>,<span class="hljs-string">&quot;pzc&quot;</span><br><br>	p_pilicies := [][]<span class="hljs-keyword">string</span>&#123;<br>		&#123;gh_dev, gh, <span class="hljs-string">&quot;/root*&quot;</span>, get&#125;,<br>		&#123;gh_dev, gh, <span class="hljs-string">&quot;/root/age*&quot;</span>, post&#125;,<br>		&#123;hh_dev, hh, <span class="hljs-string">&quot;/root*&quot;</span>, get&#125;,<br>		&#123;hh_dev, hh, <span class="hljs-string">&quot;/root/age*&quot;</span>, post&#125;,<br>		&#123;gh_admin, gh, <span class="hljs-string">&quot;/root*&quot;</span>, post&#125;,<br>		&#123;hh_admin, hh, <span class="hljs-string">&quot;/root*&quot;</span>, post&#125;,<br>		&#123;root, gh, <span class="hljs-string">&quot;/root*&quot;</span>, get&#125;,<br>		&#123;root, gh, <span class="hljs-string">&quot;/root*&quot;</span>, post&#125;,<br>		&#123;root, hh, <span class="hljs-string">&quot;/root*&quot;</span>, get&#125;,<br>		&#123;root, hh, <span class="hljs-string">&quot;/root*&quot;</span>, post&#125;,<br>	&#125;<br>	g_pilicies := [][]<span class="hljs-keyword">string</span>&#123;<br>		&#123;gh_admin, gh_dev, gh&#125;,<br>		&#123;hh_admin, hh_dev, hh&#125;,<br>		&#123;zr, gh_dev, gh&#125;,<br>		&#123;lc, gh_admin, gh&#125;,<br>		&#123;xm, system, gh&#125;,<br>		&#123;xm, system, hh&#125;<br>	&#125;<br><br>	_, err = e.AddPolicies(p_pilicies)                 <br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;添加p失败,错误：%v&quot;</span>,err)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err<br>	&#125;<br>	_, err = e.AddGroupingPolicies(g_pilicies)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;添加g失败,错误：%v&quot;</span>,err)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err<br>	&#125;<br>	<span class="hljs-keyword">return</span> e,<span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
-<h3 id="编写检查权限函数"><a href="#编写检查权限函数" class="headerlink" title="编写检查权限函数"></a>编写检查权限函数</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">check</span><span class="hljs-params">(e *casbin.Enforcer, sub, dom, obj, act <span class="hljs-keyword">string</span>)</span></span> &#123;<br>	ok, _ := e.Enforce(sub, dom, obj, act)<br>	<span class="hljs-keyword">if</span> ok &#123;<br>		fmt.Printf(<span class="hljs-string">&quot;%s的%s对%s有%s权限\n&quot;</span>,dom, sub, obj, act)<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		fmt.Printf(<span class="hljs-string">&quot;权限不足：%s的%s对%s没有%s权限\n&quot;</span>,dom, sub, obj, act)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<h3 id="main函数"><a href="#main函数" class="headerlink" title="main函数"></a>main函数</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	e, err := InitCasbin()            <span class="hljs-comment">// 初始化casbin</span><br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;初始化失败，err:%v&quot;</span>,err)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	url1 := <span class="hljs-string">&quot;/root/&quot;</span><br>	url2 := <span class="hljs-string">&quot;/root/age?15&quot;</span><br>	url4 := <span class="hljs-string">&quot;/home/name&quot;</span><br><br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, url1, <span class="hljs-string">&quot;get&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, url2, <span class="hljs-string">&quot;post&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, url1, <span class="hljs-string">&quot;post&quot;</span>)         <span class="hljs-comment">// 没有权限</span><br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;hh&quot;</span>, url1, <span class="hljs-string">&quot;get&quot;</span>)          <span class="hljs-comment">// 没有权限</span><br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, url4, <span class="hljs-string">&quot;get&quot;</span>)          <span class="hljs-comment">// 没有权限</span><br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;/root/name&quot;</span>, <span class="hljs-string">&quot;post&quot;</span>) <span class="hljs-comment">// 没有权限</span><br>	check(e, <span class="hljs-string">&quot;lc&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, url1, <span class="hljs-string">&quot;get&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;lc&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, url2, <span class="hljs-string">&quot;post&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;lc&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, url1, <span class="hljs-string">&quot;post&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;lc&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;/&quot;</span>, <span class="hljs-string">&quot;get&quot;</span>)  <span class="hljs-comment">// 没有权限</span><br>	check(e, <span class="hljs-string">&quot;lc&quot;</span>, <span class="hljs-string">&quot;hh&quot;</span>, url1, <span class="hljs-string">&quot;get&quot;</span>) <span class="hljs-comment">// 没有权限</span><br>	e.AddPolicy(<span class="hljs-string">&quot;zr&quot;</span>,<span class="hljs-string">&quot;gh&quot;</span>,<span class="hljs-string">&quot;/root/name*&quot;</span>,<span class="hljs-string">&quot;get&quot;</span>) 		<span class="hljs-comment">//为zr添加gh的/root/name的get权限</span><br>	e.AddGroupingPolicy(<span class="hljs-string">&quot;Jay&quot;</span>,<span class="hljs-string">&quot;gh_admin&quot;</span>,<span class="hljs-string">&quot;gh&quot;</span>)		<span class="hljs-comment">// 为Jay添加gh的admin角色</span><br>	fmt.Println(<span class="hljs-string">&quot;-------添加权限后-----------&quot;</span>)<br>	check(e, <span class="hljs-string">&quot;zr&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;/root/name?15&quot;</span>, <span class="hljs-string">&quot;get&quot;</span>) <span class="hljs-comment">// 有权限</span><br>	check(e, <span class="hljs-string">&quot;Jay&quot;</span>, <span class="hljs-string">&quot;gh&quot;</span>, <span class="hljs-string">&quot;/root&quot;</span>, <span class="hljs-string">&quot;get&quot;</span>) <span class="hljs-comment">// 有权限</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get github.com/casbin/casbin/v2</span><br></pre></td></tr></table></figure>
+<h3 id="编写模型文件model-conf"><a href="#编写模型文件model-conf" class="headerlink" title="编写模型文件model.conf"></a>编写模型文件<code>model.conf</code></h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[role_definition]</span><br><span class="line">g = _, _, _</span><br><span class="line"></span><br><span class="line">[request_definition]</span><br><span class="line">r = sub, dom, obj, act       <span class="comment">//sub-用户，dom-域，obj-资源，act-操作</span></span><br><span class="line"></span><br><span class="line">[policy_definition]</span><br><span class="line">p = sub, dom, obj, act</span><br><span class="line"></span><br><span class="line">[matchers]</span><br><span class="line">m = g(r.sub, p.sub, r.dom) &amp;&amp; r.act == p.act &amp;&amp; r.dom == p.dom &amp;&amp; keyMatch(r.obj, p.obj)</span><br><span class="line"></span><br><span class="line">[policy_effect]</span><br><span class="line">e = some(where (p.eft == allow))     <span class="comment">// 任意一条 policy rule 满足, 则最终结果为 allow</span></span><br></pre></td></tr></table></figure>
+<h3 id="持久化存储权限到mysql并初始化"><a href="#持久化存储权限到mysql并初始化" class="headerlink" title="持久化存储权限到mysql并初始化"></a>持久化存储权限到mysql并初始化</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Casbin</span><span class="params">()</span> *<span class="title">casbin</span>.<span class="title">Enforcer</span></span>&#123;</span><br><span class="line">	a, _ := gormadapter.NewAdapter(<span class="string">&quot;mysql&quot;</span>, <span class="string">&quot;user_name:user_passwd@tcp(127.0.0.1:3306)/&quot;</span>) <span class="comment">// Your driver and data source.</span></span><br><span class="line">	e, err := casbin.NewEnforcer(<span class="string">&quot;./model.conf&quot;</span>, a)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">&quot;载入casbin配置出错&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	e.LoadPolicy() <span class="comment">// 从数据库载入配置</span></span><br><span class="line">	<span class="keyword">return</span> e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">InitCasbin</span><span class="params">()</span><span class="params">(e *casbin.Enforcer ,err error)</span></span> &#123;</span><br><span class="line">	e = Casbin()</span><br><span class="line">	gh_dev, gh, data1, read, write, hh_dev, hh_admin, root, gh_admin,hh,data2,zr,gp,lc,mdw,pzc := <span class="string">&quot;gh_dev&quot;</span>, <span class="string">&quot;gh&quot;</span>,<span class="string">&quot;data1&quot;</span>,<span class="string">&quot;read&quot;</span>,<span class="string">&quot;write&quot;</span>,<span class="string">&quot;hh_dev&quot;</span>,<span class="string">&quot;hh_admin&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;gh_admin&quot;</span>,<span class="string">&quot;hh&quot;</span>,<span class="string">&quot;data2&quot;</span>,<span class="string">&quot;zr&quot;</span>,<span class="string">&quot;gp&quot;</span>,<span class="string">&quot;lc&quot;</span>,<span class="string">&quot;mdw&quot;</span>,<span class="string">&quot;pzc&quot;</span></span><br><span class="line"></span><br><span class="line">	p_pilicies := [][]<span class="keyword">string</span>&#123;</span><br><span class="line">		&#123;gh_dev, gh, <span class="string">&quot;/root*&quot;</span>, get&#125;,</span><br><span class="line">		&#123;gh_dev, gh, <span class="string">&quot;/root/age*&quot;</span>, post&#125;,</span><br><span class="line">		&#123;hh_dev, hh, <span class="string">&quot;/root*&quot;</span>, get&#125;,</span><br><span class="line">		&#123;hh_dev, hh, <span class="string">&quot;/root/age*&quot;</span>, post&#125;,</span><br><span class="line">		&#123;gh_admin, gh, <span class="string">&quot;/root*&quot;</span>, post&#125;,</span><br><span class="line">		&#123;hh_admin, hh, <span class="string">&quot;/root*&quot;</span>, post&#125;,</span><br><span class="line">		&#123;root, gh, <span class="string">&quot;/root*&quot;</span>, get&#125;,</span><br><span class="line">		&#123;root, gh, <span class="string">&quot;/root*&quot;</span>, post&#125;,</span><br><span class="line">		&#123;root, hh, <span class="string">&quot;/root*&quot;</span>, get&#125;,</span><br><span class="line">		&#123;root, hh, <span class="string">&quot;/root*&quot;</span>, post&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	g_pilicies := [][]<span class="keyword">string</span>&#123;</span><br><span class="line">		&#123;gh_admin, gh_dev, gh&#125;,</span><br><span class="line">		&#123;hh_admin, hh_dev, hh&#125;,</span><br><span class="line">		&#123;zr, gh_dev, gh&#125;,</span><br><span class="line">		&#123;lc, gh_admin, gh&#125;,</span><br><span class="line">		&#123;xm, system, gh&#125;,</span><br><span class="line">		&#123;xm, system, hh&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	_, err = e.AddPolicies(p_pilicies)                 </span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatalf(<span class="string">&quot;添加p失败,错误：%v&quot;</span>,err)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	_, err = e.AddGroupingPolicies(g_pilicies)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatalf(<span class="string">&quot;添加g失败,错误：%v&quot;</span>,err)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> e,<span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="编写检查权限函数"><a href="#编写检查权限函数" class="headerlink" title="编写检查权限函数"></a>编写检查权限函数</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">check</span><span class="params">(e *casbin.Enforcer, sub, dom, obj, act <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	ok, _ := e.Enforce(sub, dom, obj, act)</span><br><span class="line">	<span class="keyword">if</span> ok &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%s的%s对%s有%s权限\n&quot;</span>,dom, sub, obj, act)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;权限不足：%s的%s对%s没有%s权限\n&quot;</span>,dom, sub, obj, act)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="main函数"><a href="#main函数" class="headerlink" title="main函数"></a>main函数</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	e, err := InitCasbin()            <span class="comment">// 初始化casbin</span></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatalf(<span class="string">&quot;初始化失败，err:%v&quot;</span>,err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	url1 := <span class="string">&quot;/root/&quot;</span></span><br><span class="line">	url2 := <span class="string">&quot;/root/age?15&quot;</span></span><br><span class="line">	url4 := <span class="string">&quot;/home/name&quot;</span></span><br><span class="line"></span><br><span class="line">	check(e, <span class="string">&quot;zr&quot;</span>, <span class="string">&quot;gh&quot;</span>, url1, <span class="string">&quot;get&quot;</span>)</span><br><span class="line">	check(e, <span class="string">&quot;zr&quot;</span>, <span class="string">&quot;gh&quot;</span>, url2, <span class="string">&quot;post&quot;</span>)</span><br><span class="line">	check(e, <span class="string">&quot;zr&quot;</span>, <span class="string">&quot;gh&quot;</span>, url1, <span class="string">&quot;post&quot;</span>)         <span class="comment">// 没有权限</span></span><br><span class="line">	check(e, <span class="string">&quot;zr&quot;</span>, <span class="string">&quot;hh&quot;</span>, url1, <span class="string">&quot;get&quot;</span>)          <span class="comment">// 没有权限</span></span><br><span class="line">	check(e, <span class="string">&quot;zr&quot;</span>, <span class="string">&quot;gh&quot;</span>, url4, <span class="string">&quot;get&quot;</span>)          <span class="comment">// 没有权限</span></span><br><span class="line">	check(e, <span class="string">&quot;zr&quot;</span>, <span class="string">&quot;gh&quot;</span>, <span class="string">&quot;/root/name&quot;</span>, <span class="string">&quot;post&quot;</span>) <span class="comment">// 没有权限</span></span><br><span class="line">	check(e, <span class="string">&quot;lc&quot;</span>, <span class="string">&quot;gh&quot;</span>, url1, <span class="string">&quot;get&quot;</span>)</span><br><span class="line">	check(e, <span class="string">&quot;lc&quot;</span>, <span class="string">&quot;gh&quot;</span>, url2, <span class="string">&quot;post&quot;</span>)</span><br><span class="line">	check(e, <span class="string">&quot;lc&quot;</span>, <span class="string">&quot;gh&quot;</span>, url1, <span class="string">&quot;post&quot;</span>)</span><br><span class="line">	check(e, <span class="string">&quot;lc&quot;</span>, <span class="string">&quot;gh&quot;</span>, <span class="string">&quot;/&quot;</span>, <span class="string">&quot;get&quot;</span>)  <span class="comment">// 没有权限</span></span><br><span class="line">	check(e, <span class="string">&quot;lc&quot;</span>, <span class="string">&quot;hh&quot;</span>, url1, <span class="string">&quot;get&quot;</span>) <span class="comment">// 没有权限</span></span><br><span class="line">	e.AddPolicy(<span class="string">&quot;zr&quot;</span>,<span class="string">&quot;gh&quot;</span>,<span class="string">&quot;/root/name*&quot;</span>,<span class="string">&quot;get&quot;</span>) 		<span class="comment">//为zr添加gh的/root/name的get权限</span></span><br><span class="line">	e.AddGroupingPolicy(<span class="string">&quot;Jay&quot;</span>,<span class="string">&quot;gh_admin&quot;</span>,<span class="string">&quot;gh&quot;</span>)		<span class="comment">// 为Jay添加gh的admin角色</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;-------添加权限后-----------&quot;</span>)</span><br><span class="line">	check(e, <span class="string">&quot;zr&quot;</span>, <span class="string">&quot;gh&quot;</span>, <span class="string">&quot;/root/name?15&quot;</span>, <span class="string">&quot;get&quot;</span>) <span class="comment">// 有权限</span></span><br><span class="line">	check(e, <span class="string">&quot;Jay&quot;</span>, <span class="string">&quot;gh&quot;</span>, <span class="string">&quot;/root&quot;</span>, <span class="string">&quot;get&quot;</span>) <span class="comment">// 有权限</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行结果：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go">gh的zr对/root/有get权限<br>gh的zr对/root/age?<span class="hljs-number">15</span>有post权限<br>权限不足：gh的zr对/root/没有post权限<br>权限不足：hh的zr对/root/没有get权限<br>权限不足：gh的zr对/home/name没有get权限<br>权限不足：gh的zr对/root/name没有post权限<br>gh的lc对/root/有get权限<br>gh的lc对/root/age?<span class="hljs-number">15</span>有post权限<br>权限不足：hh的pzc对data2没有write权限<br>hh的system对data2有write权限<br>gh的system对data1有read权限<br>-------添加权限后-----------<br>gh的zr对/root/name?<span class="hljs-number">15</span>有get权限<br>gh的Jay对/root有get权限<br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">gh的zr对/root/有get权限</span><br><span class="line">gh的zr对/root/age?<span class="number">15</span>有post权限</span><br><span class="line">权限不足：gh的zr对/root/没有post权限</span><br><span class="line">权限不足：hh的zr对/root/没有get权限</span><br><span class="line">权限不足：gh的zr对/home/name没有get权限</span><br><span class="line">权限不足：gh的zr对/root/name没有post权限</span><br><span class="line">gh的lc对/root/有get权限</span><br><span class="line">gh的lc对/root/age?<span class="number">15</span>有post权限</span><br><span class="line">权限不足：hh的pzc对data2没有write权限</span><br><span class="line">hh的system对data2有write权限</span><br><span class="line">gh的system对data1有read权限</span><br><span class="line">-------添加权限后-----------</span><br><span class="line">gh的zr对/root/name?<span class="number">15</span>有get权限</span><br><span class="line">gh的Jay对/root有get权限</span><br></pre></td></tr></table></figure>
 <h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><p>可以看到上面的<code>root</code>用户是具有最高权限的,可以拥有所有租户的所有数据的所有权限:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">&#123;root, gh, <span class="hljs-string">&quot;/root*&quot;</span>, get&#125;,<br>&#123;root, gh, <span class="hljs-string">&quot;/root*&quot;</span>, post&#125;,<br>&#123;root, hh, <span class="hljs-string">&quot;/root*&quot;</span>, get&#125;,<br>&#123;root, hh, <span class="hljs-string">&quot;/root*&quot;</span>, post&#125;,<br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;root, gh, <span class="string">&quot;/root*&quot;</span>, get&#125;,</span><br><span class="line">&#123;root, gh, <span class="string">&quot;/root*&quot;</span>, post&#125;,</span><br><span class="line">&#123;root, hh, <span class="string">&quot;/root*&quot;</span>, get&#125;,</span><br><span class="line">&#123;root, hh, <span class="string">&quot;/root*&quot;</span>, post&#125;,</span><br></pre></td></tr></table></figure>
 
 <p>倘若租户数量和租户里的数据较多时，为所有数据一个一个添加权限则会显得相当繁琐，因此必须使用另外的方法来设置<code>root</code>用户的最高权限<br>我们在数据库中建个<code>users</code>表存储用户信息：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> User <span class="hljs-keyword">struct</span> &#123;<br>	ID       <span class="hljs-keyword">uint</span><br>	UserName <span class="hljs-keyword">string</span> <span class="hljs-string">`gorm:&quot;type:varchar(32);not null;index;&quot;`</span><br>	Name     <span class="hljs-keyword">string</span> <span class="hljs-string">`gorm:&quot;type:varchar(32);not null;&quot;`</span><br>	Role     <span class="hljs-keyword">string</span> <span class="hljs-string">`gorm:&quot;type:varchar(32);not null;&quot;`</span><br>	Domain   <span class="hljs-keyword">string</span> <span class="hljs-string">`gorm:&quot;type:varchar(32);&quot;`</span><br>	IsDelete <span class="hljs-keyword">uint8</span>  <span class="hljs-string">`gorm:&quot;default: 0&quot;`</span><br>	gorm.Model<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">	ID       <span class="keyword">uint</span></span><br><span class="line">	UserName <span class="keyword">string</span> <span class="string">`gorm:&quot;type:varchar(32);not null;index;&quot;`</span></span><br><span class="line">	Name     <span class="keyword">string</span> <span class="string">`gorm:&quot;type:varchar(32);not null;&quot;`</span></span><br><span class="line">	Role     <span class="keyword">string</span> <span class="string">`gorm:&quot;type:varchar(32);not null;&quot;`</span></span><br><span class="line">	Domain   <span class="keyword">string</span> <span class="string">`gorm:&quot;type:varchar(32);&quot;`</span></span><br><span class="line">	IsDelete <span class="keyword">uint8</span>  <span class="string">`gorm:&quot;default: 0&quot;`</span></span><br><span class="line">	gorm.Model</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>再编写函数判断当前发起请求用户是否是<code>root</code>用户:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//  判断是否是root用户</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">isRoot</span><span class="hljs-params">(sub <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">bool</span></span> &#123;<br>	userModels, err := GetRootUser()<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-built_in">panic</span>(fmt.Errorf(<span class="hljs-string">&quot;获取root用户名单失败，原因：%v&quot;</span>, err))<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>	&#125;<br>	<span class="hljs-keyword">for</span> _, userModel := <span class="hljs-keyword">range</span> userModels &#123;<br>		<span class="hljs-keyword">if</span> sub == userModel.UserName &#123;<br>			<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>&#125;<br><span class="hljs-comment">//  获取root用户列表</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetRootUser</span><span class="hljs-params">()</span></span>&#123;<br>	user := []*User&#123;&#125;<br>	err := CasbinDb.Where(<span class="hljs-string">&quot;role = ? AND is_delete = ?&quot;</span>, <span class="hljs-string">&quot;root&quot;</span>, <span class="hljs-number">0</span>).Find(&amp;user).Error<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err<br>	&#125;<br>	<span class="hljs-keyword">return</span> user, <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  判断是否是root用户</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">isRoot</span><span class="params">(sub <span class="keyword">string</span>)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	userModels, err := GetRootUser()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(fmt.Errorf(<span class="string">&quot;获取root用户名单失败，原因：%v&quot;</span>, err))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> _, userModel := <span class="keyword">range</span> userModels &#123;</span><br><span class="line">		<span class="keyword">if</span> sub == userModel.UserName &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//  获取root用户列表</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetRootUser</span><span class="params">()</span></span>&#123;</span><br><span class="line">	user := []*User&#123;&#125;</span><br><span class="line">	err := CasbinDb.Where(<span class="string">&quot;role = ? AND is_delete = ?&quot;</span>, <span class="string">&quot;root&quot;</span>, <span class="number">0</span>).Find(&amp;user).Error</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> user, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>用interface类型接口包装上面函数</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">KeyMatchFunc</span><span class="hljs-params">(arg ...<span class="hljs-keyword">interface</span>&#123;&#125;)</span> <span class="hljs-params">(<span class="hljs-keyword">interface</span>&#123;&#125;, error)</span></span> &#123;<br>	sub := arg[<span class="hljs-number">0</span>].(<span class="hljs-keyword">string</span>)<br>	<span class="hljs-keyword">return</span> isRoot(sub), <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">KeyMatchFunc</span><span class="params">(arg ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span> &#123;</span><br><span class="line">	sub := arg[<span class="number">0</span>].(<span class="keyword">string</span>)</span><br><span class="line">	<span class="keyword">return</span> isRoot(sub), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>然后在<code>casbin</code>的<code>enforcer</code>对象中注册这个函数：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">e.AddFunction(<span class="hljs-string">&quot;isRoot&quot;</span>, KeyMatchFunc)<br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e.AddFunction(<span class="string">&quot;isRoot&quot;</span>, KeyMatchFunc)</span><br></pre></td></tr></table></figure>
 
 <p>修改<code>model.conf</code>中的<code>matchers</code>为下面所示(在最后面加上<code>isRoot</code>判断函数)</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">[matchers]<br>m = g(r.sub, p.sub, r.dom) &amp;&amp; r.act == p.act &amp;&amp; r.dom == p.dom &amp;&amp; keyMatch(r.obj, p.obj) || isRoot(r.sub)<br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[matchers]</span><br><span class="line">m = g(r.sub, p.sub, r.dom) &amp;&amp; r.act == p.act &amp;&amp; r.dom == p.dom &amp;&amp; keyMatch(r.obj, p.obj) || isRoot(r.sub)</span><br></pre></td></tr></table></figure>
 
 <p>现在数据库表中数据为：<img src="https://img-blog.csdnimg.cn/de57797ec31c4f31a400a344433d39fc.png" srcset="/blog/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>新增的测试用例为</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">url1 := <span class="hljs-string">&quot;/root/&quot;</span><br>check(e, <span class="hljs-string">&quot;root1&quot;</span>, <span class="hljs-string">&quot;hh&quot;</span>, url1, <span class="hljs-string">&quot;get&quot;</span>)<br>check(e, <span class="hljs-string">&quot;root2&quot;</span>, <span class="hljs-string">&quot;dsda&quot;</span>, url1, <span class="hljs-string">&quot;get&quot;</span>)<br>check(e, <span class="hljs-string">&quot;root3&quot;</span>, <span class="hljs-string">&quot;sda&quot;</span>, url1, <span class="hljs-string">&quot;get&quot;</span>) <span class="hljs-comment">// 没有权限,因为数据库中没有root3用户</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">url1 := <span class="string">&quot;/root/&quot;</span></span><br><span class="line">check(e, <span class="string">&quot;root1&quot;</span>, <span class="string">&quot;hh&quot;</span>, url1, <span class="string">&quot;get&quot;</span>)</span><br><span class="line">check(e, <span class="string">&quot;root2&quot;</span>, <span class="string">&quot;dsda&quot;</span>, url1, <span class="string">&quot;get&quot;</span>)</span><br><span class="line">check(e, <span class="string">&quot;root3&quot;</span>, <span class="string">&quot;sda&quot;</span>, url1, <span class="string">&quot;get&quot;</span>) <span class="comment">// 没有权限,因为数据库中没有root3用户</span></span><br></pre></td></tr></table></figure>
 
 <p>运行结果：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">hh的root1对/root/有get权限<br>dsda的root2对/root/有get权限<br>权限不足：sda的root3对/root/没有get权限<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hh的root1对/root/有get权限</span><br><span class="line">dsda的root2对/root/有get权限</span><br><span class="line">权限不足：sda的root3对/root/没有get权限</span><br></pre></td></tr></table></figure>
 
-              
             </div>
-            <hr/>
+            <hr>
             <div>
-              <div class="post-metas my-3">
-  
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/blog/categories/Go/" class="category-chain-item">Go</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/blog/tags/Go/">#Go</a>
-      
-    </div>
-  
-</div>
-
-
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/Go/">Go</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/Go/">Go</a>
+                    
+                  </div>
+                
+              </div>
               
-  
-
-  <div class="license-box my-3">
-    <div class="license-title">
-      <div>通过casbin实现RBAC权限设计(Mysql存储Policy)</div>
-      <div>http://zrgo.top/blog/2021/12/01/%E9%80%9A%E8%BF%87casbin%E5%AE%9E%E7%8E%B0RBAC%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1-Mysql%E5%AD%98%E5%82%A8Policy/</div>
-    </div>
-    <div class="license-meta">
-      
-        <div class="license-meta-item">
-          <div>作者</div>
-          <div>天涯过客</div>
-        </div>
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>发布于</div>
-          <div>2021年12月1日</div>
-        </div>
-      
-      
-      <div class="license-meta-item">
-        <div>许可协议</div>
-        <div>
-          
-            
-            
-              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
-              <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                <i class="iconfont icon-by"></i>
-              </span>
-              </a>
-            
-          
-        </div>
-      </div>
-    </div>
-    <div class="license-icon iconfont"></div>
-  </div>
-
-
-
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
               
-                <div class="post-prevnext my-3">
+              
+                <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2021/12/05/WSL2%E5%AE%89%E8%A3%85CentOS7%E5%92%8CXfce4%E6%A1%8C%E9%9D%A2/" title="WSL2安装CentOS7和Xfce4桌面">
+                      <a href="/blog/2021/12/05/WSL2%E5%AE%89%E8%A3%85CentOS7%E5%92%8CXfce4%E6%A1%8C%E9%9D%A2/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">WSL2安装CentOS7和Xfce4桌面</span>
                         <span class="visible-mobile">上一篇</span>
@@ -395,7 +317,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2021/12/01/Go%E7%9A%84Goroutine/" title="Go的Goroutine">
+                      <a href="/blog/2021/12/01/Go%E7%9A%84Goroutine/">
                         <span class="hidden-mobile">Go的Goroutine</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -411,49 +333,19 @@
         </div>
       </div>
     </div>
-
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-  <aside class="sidebar" style="margin-left: -1rem">
-    <div id="toc">
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
   <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div class="toc-body" id="toc-body"></div>
 </div>
 
-
-
-  </aside>
-
-
-    </div>
+      </div>
+    
   </div>
 </div>
 
-
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-
+<!-- Custom -->
 
 
     
@@ -478,37 +370,35 @@
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
-
     
 
     
   </main>
 
-  <footer>
-    <div class="footer-inner">
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
   
-    <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-    </div>
-  
-  
-  
-  
-</div>
 
-  </footer>
-
-  <!-- Scripts -->
   
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
 
   <script>
     NProgress.configure({"showSpinner":false,"trickleSpeed":100})
@@ -519,29 +409,15 @@
   </script>
 
 
-<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
 <script  src="/blog/js/events.js" ></script>
 <script  src="/blog/js/plugins.js" ></script>
 
-
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var subtitle = document.getElementById('subtitle');
-      if (!subtitle || !typing) {
-        return;
-      }
-      var text = subtitle.getAttribute('data-typed-text');
-      
-        typing(text);
-      
-    })(window, document);
-  </script>
+<!-- Plugins -->
 
 
-
+  <script  src="/blog/js/local-search.js" ></script>
 
 
 
@@ -551,153 +427,56 @@
 
 
 
+  
+
+
 
   
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
-    var toc = jQuery('#toc');
-    if (toc.length === 0 || !window.tocbot) { return; }
-    var boardCtn = jQuery('#board-ctn');
-    var boardTop = boardCtn.offset().top;
-
-    window.tocbot.init({
-      tocSelector     : '#toc-body',
-      contentSelector : '.markdown-body',
-      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
-      linkClass       : 'tocbot-link',
-      activeLinkClass : 'tocbot-active-link',
-      listClass       : 'tocbot-list',
-      isCollapsedClass: 'tocbot-is-collapsed',
-      collapsibleClass: 'tocbot-is-collapsible',
-      collapseDepth   : CONFIG.toc.collapseDepth || 0,
-      scrollSmooth    : true,
-      headingsOffset  : -boardTop
-    });
-    if (toc.find('.toc-list-item').length > 0) {
-      toc.css('visibility', 'visible');
-    }
-  });
-</script>
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
 
 
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
   <script>
-  (function() {
-    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
-    var enableCopy = CONFIG.copy_btn;
-    if (!enableLang && !enableCopy) {
-      return;
-    }
-
-    function getBgClass(ele) {
-      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
-    }
-
-    var copyTmpl = '';
-    copyTmpl += '<div class="code-widget">';
-    copyTmpl += 'LANG';
-    copyTmpl += '</div>';
-    jQuery('.markdown-body pre').each(function() {
-      var $pre = jQuery(this);
-      if ($pre.find('code.mermaid').length > 0) {
-        return;
-      }
-      if ($pre.find('span.line').length > 0) {
-        return;
-      }
-
-      var lang = '';
-
-      if (enableLang) {
-        lang = CONFIG.code_language.default;
-        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
-          lang = $pre[0].children[0].classList[1];
-        } else if ($pre[0].getAttribute('data-language')) {
-          lang = $pre[0].getAttribute('data-language');
-        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
-          lang = $pre[0].children[0].classList[1];
-          $pre.parent().addClass('code-wrapper');
-        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
-          $pre.wrap('<div class="code-wrapper"></div>');
-        }
-        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
-      }
-      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
-        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
-
-      if (enableCopy) {
-        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
-          var clipboard = new window.ClipboardJS('.copy-btn', {
-            target: function(trigger) {
-              var nodes = trigger.parentNode.childNodes;
-              for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].tagName === 'CODE') {
-                  return nodes[i];
-                }
-              }
-            }
-          });
-          clipboard.on('success', function(e) {
-            e.clearSelection();
-            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
-            setTimeout(function() {
-              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
-            }, 2000);
-          });
-        });
-      }
-    });
-  })();
-</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
-    window.anchors.options = {
-      placement: CONFIG.anchorjs.placement,
-      visible  : CONFIG.anchorjs.visible
-    };
-    if (CONFIG.anchorjs.icon) {
-      window.anchors.options.icon = CONFIG.anchorjs.icon;
-    }
-    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-    var res = [];
-    for (var item of el) {
-      res.push('.markdown-body > ' + item.trim());
-    }
-    if (CONFIG.anchorjs.placement === 'left') {
-      window.anchors.options.class = 'anchorjs-link-left';
-    }
-    window.anchors.add(res.join(', '));
-  });
-</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
-    Fluid.plugins.fancyBox();
-  });
-</script>
-
-
-  <script>Fluid.plugins.imageCaption();</script>
-
-  <script  src="/blog/js/local-search.js" ></script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
 
 
 
 
 
-<!-- 主题的启动项，将它保持在最底部 -->
-<!-- the boot of the theme, keep it at the bottom -->
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
 <script  src="/blog/js/boot.js" ></script>
 
 
-  
-
-  <noscript>
-    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
-  </noscript>
 </body>
 </html>
